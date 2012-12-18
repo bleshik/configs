@@ -1,3 +1,3 @@
-if [ -x ~/.bash_profile ] ; then
-	. ~/.bash_profile
+if [ -x ~/.bashrc ] ; then
+	. ~/.bashrc
 fi
