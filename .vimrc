@@ -56,7 +56,7 @@ set ic
 set ruler
 
 " Sets some text format
-set ai sw=3 sts=3 noexpandtab cindent tw=0
+set ai sw=3 sts=3 expandtab cindent tw=0
 " Line wrapping off
 "set nowrap
 
@@ -129,7 +129,6 @@ set autoindent
 set et
 set listchars=tab:··
 set list
-set noexpandtab
 set showmatch
 
 " Filetype overrides

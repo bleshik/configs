@@ -1,11 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/Users/bleshik/Dropbox/Study/Coursera/Machine Learning/ex2/ex2'
-let g:netrw_dirhist_2='/Users/bleshik/Dropbox/important/Coursera/Scala/task4/patmat'
-let g:netrw_dirhist_3='/Users/bleshik/Dropbox/Study/C++'
-let g:netrw_dirhist_4='/Users/bleshik/Dropbox/important/Coursera/Machine Learning'
-let g:netrw_dirhist_5='/Users/bleshik/Dropbox/important/Coursera/Machine Learning/ex5'
-let g:netrw_dirhist_6='/Users/bleshik/Dropbox/important/Coursera/Machine Learning/ex5/ex5'
-let g:netrw_dirhist_7='/Users/bleshik/Projects/hello/foo/src/main/java'
-let g:netrw_dirhist_8='/Users/bleshik/Projects/EOrder/Source/RESTful'
-let g:netrw_dirhist_9='/Users/bleshik/Projects/Play20/framework/src'
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/Users/bleshik/Projects/deadbolt-2'
+let g:netrw_dirhist_2='/Users/bleshik/Projects/play-authenticate'
+let g:netrw_dirhist_3='/Users/bleshik/Projects/deadbolt-2/deadbolt-2-java-examples'
