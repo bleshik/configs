@@ -5,6 +5,7 @@ silent! set runtimepath+=~/.vim/doc
 " If I'm at work (windows is dumb, can't load my plugins by himself)
 silent! set runtimepath+=C:\Users\abalchunas\Dropbox\Public\Configurations\vim\.vim
 silent! set runtimepath+=C:\Users\bleshik\Dropbox\Public\Configurations\vim\.vim
+silent! set runtimepath+=~/configs/.vim
 
 " Set dictionaries
 silent! set dict+=~/.vim/dictionaries/drupal.dict
@@ -56,7 +57,7 @@ set ic
 set ruler
 
 " Sets some text format
-set ai sw=3 sts=3 noexpandtab cindent tw=0
+set ai sw=3 sts=3 expandtab cindent tw=0
 " Line wrapping off
 "set nowrap
 
@@ -129,7 +130,6 @@ set autoindent
 set et
 set listchars=tab:··
 set list
-set noexpandtab
 set showmatch
 
 " Filetype overrides
