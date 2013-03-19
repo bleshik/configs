@@ -1,8 +1,3 @@
-if test "$SSH_AUTH_SOCK" ; then
-    ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
-else
-    ssh-agent bash
-fi
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
