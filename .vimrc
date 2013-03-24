@@ -97,8 +97,8 @@ filetype plugin on
 
 " toolbars suck!
 if has('gui_running')
-	set guioptions-=T
-	set lines=999 columns=999
+    set guioptions-=T
+    set lines=999 columns=999
 endif
 
 "For Cyrilic
@@ -163,39 +163,37 @@ set showmatch
         au BufNewFile,BufRead *.vb set filetype=vb
     " .NET end
 
-	" C/C++
+    " C/C++
         au BufNewFile,BufRead *.c set filetype=c
         au BufNewFile,BufRead *.cpp set filetype=cpp
-	" C/C++ end
+    " C/C++ end
 
     " Ruby
         au BufNewFile,BufRead *.rb set filetype=ruby
     " Ruby end
-	if has("autocmd")
-		autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-		autocmd Filetype java setlocal cfu=VjdeCompletionFun
+    if has("autocmd")
+        autocmd Filetype java setlocal omnifunc=javacomplete#Complete
+        autocmd Filetype java setlocal cfu=VjdeCompletionFun
+        autocmd Filetype java retab!
 
-		autocmd FileType tex set nocindent
-		autocmd FileType tex set spelllang=ru_yo,en spell
-		autocmd FileType tex nmap <C-N>l o\begin{enumerate}<ESC>
-		autocmd FileType tex vmap <C-N>l <ESC>o\begin{enumerate}<ESC>
-		autocmd FileType tex imap <C-N>l <ESC>o\begin{enumerate}
-		autocmd FileType tex nmap <C-E>l o\end{enumerate}<ESC>
-		autocmd FileType tex vmap <C-E>l <ESC>o\end{enumerate}<ESC>
-		autocmd FileType tex imap <C-E>l <ESC>o\end{enumerate}
-		autocmd FileType tex nmap <C-N>i i\item <ESC>
-		autocmd FileType tex vmap <C-N>i <ESC>i\item <ESC>
-		autocmd FileType tex imap <C-N>i <ESC>i\item <ESC>i
+        autocmd FileType tex set nocindent
+        autocmd FileType tex set spelllang=ru_yo,en spell
+        autocmd FileType tex nmap <C-N>l o\begin{enumerate}<ESC>
+        autocmd FileType tex vmap <C-N>l <ESC>o\begin{enumerate}<ESC>
+        autocmd FileType tex imap <C-N>l <ESC>o\begin{enumerate}
+        autocmd FileType tex nmap <C-E>l o\end{enumerate}<ESC>
+        autocmd FileType tex vmap <C-E>l <ESC>o\end{enumerate}<ESC>
+        autocmd FileType tex imap <C-E>l <ESC>o\end{enumerate}
+        autocmd FileType tex nmap <C-N>i i\item <ESC>
+        autocmd FileType tex vmap <C-N>i <ESC>i\item <ESC>
+        autocmd FileType tex imap <C-N>i <ESC>i\item <ESC>i
 
-		autocmd FileType cshtml set filetype=html
-	endif
+        autocmd FileType cshtml set filetype=html
+    endif
 " Filetype overrides end
 
 " Bracket blinking.
 set mat=5
-
-" Show $ at end of line and trailing space as ~
-set lcs=tab:\ \ ,eol:\ ,trail:~,extends:>,precedes:<
 
 " No blinking
 set novisualbell
@@ -213,8 +211,8 @@ set fencs=utf-8,cp1251,koi8-r,ucs-2,cp866
 set foldmethod=indent
 " Font
 if has("gui_running")
-	"set guifont=Monaco:h12:cDEFAULTset 
-	set guifont=Consolas:h12:cDEFAULT
+    "set guifont=Monaco:h12:cDEFAULTset 
+    set guifont=Consolas:h12:cDEFAULT
 endif
 
 " Pathogen load
@@ -237,6 +235,11 @@ let g:pymode_lint_cwindow = 0
 nmap <C-P> :CtrlPMixed<cr>
 vmap <C-P> <ESC>:CtrlPMixed<cr>
 imap <C-P> <ESC>:CtrlPMixed<cr>i
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn|idea)$',
+  \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore)$',
+  \ 'link': 'some_bad_symbolic_links'
+  \ }
 
 " tabs
 map <C-Tab> gt
@@ -255,11 +258,11 @@ nmap <C-S-N> :SearchWrap<CR>
 "nmap n :cnext<CR>
 
 if has('statusline')
-	set laststatus=2
-	" Broken down into easily includeable segments
-	set statusline=%<%f\    " Filename
-	set statusline+=\ [%{&ff}/%Y]            " filetype
-	set statusline+=\ [%{getcwd()}]          " current dir
+    set laststatus=2
+    " Broken down into easily includeable segments
+    set statusline=%<%f\    " Filename
+    set statusline+=\ [%{&ff}/%Y]            " filetype
+    set statusline+=\ [%{getcwd()}]          " current dir
 endif
 
 " encodings

@@ -103,3 +103,6 @@ fi
 # /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
 
 alias tmux="TERM=xterm-256color tmux"
+
+PATH=$PATH:/usr/local/texlive/2011/bin/universal-darwin/
+launchctl setenv PATH $PATH
