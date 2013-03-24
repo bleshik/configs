@@ -104,5 +104,7 @@ fi
 
 alias tmux="TERM=xterm-256color tmux"
 
-PATH=$PATH:/usr/local/texlive/2011/bin/universal-darwin/
-launchctl setenv PATH $PATH
+if [ -x ~/.bashrc_additional ] ; then
+    . ~/.bashrc_additional
+fi
+

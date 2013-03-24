@@ -5,6 +5,7 @@ silent! set runtimepath+=~/.vim/doc
 " If I'm at work (windows is dumb, can't load my plugins by himself)
 silent! set runtimepath+=C:\Users\abalchunas\Dropbox\Public\Configurations\vim\.vim
 silent! set runtimepath+=C:\Users\bleshik\Dropbox\Public\Configurations\vim\.vim
+silent! set runtimepath+=~/configs/.vim
 
 " Set dictionaries
 silent! set dict+=~/.vim/dictionaries/drupal.dict
