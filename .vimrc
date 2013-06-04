@@ -233,9 +233,7 @@ let g:pymode_lint_jump = 1
 let g:pymode_lint_cwindow = 0
 
 " CtrlP plugin
-nmap <C-P> :CtrlPMixed<cr>
-vmap <C-P> <ESC>:CtrlPMixed<cr>
-imap <C-P> <ESC>:CtrlPMixed<cr>i
+let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\v[\/]\.(git|hg|svn|idea)$',
   \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore)$',
