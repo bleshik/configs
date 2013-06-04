@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =4
 let g:netrw_dirhist_1='/Users/bleshik/Projects/deadbolt-2'
 let g:netrw_dirhist_2='/Users/bleshik/Projects/play-authenticate'
 let g:netrw_dirhist_3='/Users/bleshik/Projects/deadbolt-2/deadbolt-2-java-examples'
+let g:netrw_dirhist_4='/private/etc/postfix'
