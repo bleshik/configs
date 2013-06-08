@@ -6,3 +6,4 @@ ln -sFf $PWD/.bashrc ~/.bashrc
 ln -sFf $PWD/.bash_profile ~/.bash_profile
 ln -sFf $PWD/.tmux.conf ~/.tmux.conf
 ln -sFf $PWD/.gitconfig ~/.gitconfig
+ln -sFf $PWD/.bash_history ~/.bash_history
