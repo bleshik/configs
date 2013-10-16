@@ -104,8 +104,8 @@ fi
 
 if [ ! -z "`command -v tmux`" ] ; then
     alias tmux="TERM=xterm-256color tmux"
-    if [ -z "$TMUX" ] ; then
-        tmux attach || tmux new
+    if [ ! -z "`tmux list-sessions 2>/dev/null`" ] ; then
+        tmux attach
     fi
 fi
 
