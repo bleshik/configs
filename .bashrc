@@ -102,9 +102,11 @@ fi
 
 # /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
 
-alias tmux="TERM=xterm-256color tmux"
-if [ -z "$TMUX" ] ; then
-    tmux attach || tmux new
+if [ ! -z "`command -v tmux`" ] ; then
+    alias tmux="TERM=xterm-256color tmux"
+    if [ -z "$TMUX" ] ; then
+        tmux attach || tmux new
+    fi
 fi
 
 if [ -x ~/.bashrc_additional ] ; then
