@@ -103,6 +103,7 @@ fi
 # /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
 
 alias tmux="TERM=xterm-256color tmux"
+tmux attach || tmux new
 
 if [ -x ~/.bashrc_additional ] ; then
     . ~/.bashrc_additional
@@ -111,3 +112,5 @@ fi
 if [ -f ~/.ssh/config ] ; then
     complete -o default -o nospace -W "$(/usr/bin/env ruby -ne 'puts $_.split(/[,\s]+/)[1..-1].reject{|host| host.match(/\*|\?/)} if $_.match(/^\s*Host\s+/);' < $HOME/.ssh/config)" scp sftp ssh
 fi
+
+export EDITOR=vi
