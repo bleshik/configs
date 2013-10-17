@@ -18,8 +18,6 @@ syntax on
 syntax enable
 let loaded_scala_syntax_checker = 0
 
-" Yanks go on clipboard instead.
-set clipboard+=unnamed
 " Number of things to remember in history.
 set history=256
 " Writes on make/shell commands
