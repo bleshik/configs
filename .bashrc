@@ -104,13 +104,8 @@ fi
 
 if [ ! -z "`command -v tmux`" ] ; then
     alias tmux="TERM=xterm-256color tmux"
-<<<<<<< HEAD
-    if [ ! -z "`tmux list-sessions 2>/dev/null`" ] ; then
-        if [ -z "$TMUX" ] ; then
-=======
     if [ -z "$TMUX" ] ; then
         if [ ! -z "`tmux list-sessions 2>/dev/null`" ] ; then
->>>>>>> f8d078d21f63c7098e542ff394ae5725cfe31f7d
             tmux attach
         fi
     fi
