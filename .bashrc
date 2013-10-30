@@ -116,3 +116,4 @@ fi
 
 export EDITOR=vim
 export GIT_EDITOR=vim
+source ~/.git-completion.bash

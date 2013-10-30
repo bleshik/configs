@@ -6,4 +6,5 @@ ln -sFf $PWD/.bashrc ~/.bashrc
 ln -sFf $PWD/.bash_profile ~/.bash_profile
 ln -sFf $PWD/.tmux.conf ~/.tmux.conf
 ln -sFf $PWD/.gitconfig ~/.gitconfig
+ln -sFf $PWD/.git-completion.bash ~/.git-completion.bash
 ln -sFf /dev/null ~/.bash_history
