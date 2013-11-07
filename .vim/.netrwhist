@@ -1,10 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
-let g:netrw_dirhist_1='/Users/bleshik/Projects/deadbolt-2'
-let g:netrw_dirhist_2='/Users/bleshik/Projects/play-authenticate'
-let g:netrw_dirhist_3='/Users/bleshik/Projects/deadbolt-2/deadbolt-2-java-examples'
-let g:netrw_dirhist_4='/private/etc/postfix'
-let g:netrw_dirhist_5='/Users/bleshik/K/bayan2/branches/2.14/bayan2'
-let g:netrw_dirhist_6='/Users/bleshik/K/aero-deb'
-let g:netrw_dirhist_7='/Users/bleshik/K/bayan2'
-let g:netrw_dirhist_8='/Users/bleshik/K/bayan2-backend/bayan2/src/main/resources/db/recreatables/Schemas'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/Users/bleshik/K/bayan2-backend/bayan2/src/main/resources/db/recreatables'
