@@ -1,3 +1,10 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/Users/bleshik/K/bayan2-backend/bayan2/src/main/resources/db/recreatables'
+let g:netrw_dirhist_2='/Users/bleshik/K/bayan2-backend/.git/hooks'
+let g:netrw_dirhist_3='/Users/bleshik/K/bayan2-backend/.githooks'
+let g:netrw_dirhist_4='/Users/bleshik/Library/Preferences'
+let g:netrw_dirhist_5='/Users/bleshik/K/bayan2-backend/util'
+let g:netrw_dirhist_6='/Users/bleshik/configs/.vim/bundle/splice'
+let g:netrw_dirhist_7='/Users/bleshik/configs/.vim/bundle/vim-colors-solarized/colors'
+let g:netrw_dirhist_8='/Users/bleshik/configs/.vim/bundle/vim-colors-solarized'

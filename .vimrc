@@ -1,3 +1,10 @@
+" removing bad line endings
+autocmd BufRead * :silent! %s/$//g
+
+" Pathogen load
+call pathogen#infect()
+call pathogen#helptags()
+
 " Set the runtimepath
 silent! set runtimepath+=~/.vim/autoload
 silent! set runtimepath+=~/.vim/doc
@@ -15,7 +22,6 @@ silent! helptags ~/.vim/doc
 "
 " Syntax
 syntax on
-syntax enable
 let loaded_scala_syntax_checker = 0
 
 " Number of things to remember in history.
@@ -24,8 +30,8 @@ set history=256
 set autowrite
 
 " Automatically detect file types.
-filetype on
-filetype plugin on
+"filetype on
+"filetype plugin on
 
 " alt+n or alt+p to navigate between entries in QuickFix
 map <silent> <m-p> :cp <cr>
@@ -34,9 +40,10 @@ map <silent> <m-n> :cn <cr>
 " Chooses colorscheme and changes some colors
 set background=light
 "set background=dark
-let g:solarized_contrast="normal"
+let g:solarized_contrast="high"
 let g:solarized_termcolors=256
 set t_Co=256
+"set term=xterm-256color
 colorscheme solarized
 
 " Sets comments symbols
@@ -90,9 +97,6 @@ imap <Leader>x <esc>:NERDTreeClose<cr>i
 "vmap <C-S-I> <esc>i
 "imap <C-S-I> <esc>
 "nmap <C-S-I> i
-
-" Turning on filtype plugins
-filetype plugin on
 
 " toolbars suck!
 if has('gui_running')
@@ -201,10 +205,6 @@ set noerrorbells
 " Always show status line
 set laststatus=2
 
-" Encodings
-set ffs=unix,dos,mac
-set fencs=utf-8,cp1251,koi8-r,ucs-2,cp866
-
 " Folding
 "set nofoldenable
 set foldmethod=indent
@@ -213,12 +213,6 @@ if has("gui_running")
     "set guifont=Monaco:h12:cDEFAULTset 
     set guifont=Consolas:h12:cDEFAULT
 endif
-
-" Pathogen load
-filetype off
-call pathogen#infect()
-call pathogen#helptags()
-filetype plugin indent on
 
 " Python-mode
 " Place error signs
@@ -269,6 +263,5 @@ set encoding=utf-8
 " set timeout for key characters
 set tm=200
 
-" jk for escape
-inoremap jk <esc>
-inoremap kj <esc>
+" vimdiff
+set diffopt+=iwhite

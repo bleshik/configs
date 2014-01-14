@@ -106,8 +106,8 @@ if [ ! -z "`command -v tmux`" ] ; then
     alias tmux="TERM=xterm-256color tmux"
 fi
 
-if [ -x ~/.bashrc_additional ] ; then
-    . ~/.bashrc_additional
+if [ -f ~/.bashrc_additional ] ; then
+    source ~/.bashrc_additional
 fi
 
 if [ -f ~/.ssh/config ] ; then
