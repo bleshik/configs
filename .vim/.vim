@@ -1,1 +1,1 @@
-/Users/bleshik/configs/.vim
+/home/bleshik/configs/.vim
