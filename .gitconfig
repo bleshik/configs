@@ -23,4 +23,4 @@
 [mergetool "fugitive"]
     cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [mergetool "vimdiff"]
-	cmd = vim \"$MERGED\"
+	cmd = vim -c \"/\\(<<<<<<<\\|=======\\|>>>>>>>\\).*\" \"$MERGED\"

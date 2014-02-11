@@ -1,5 +1,6 @@
 " removing bad line endings
 autocmd BufRead * :silent! %s/$//g
+autocmd BufRead * :normal gg
 
 " Pathogen load
 call pathogen#infect()

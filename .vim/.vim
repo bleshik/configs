@@ -1,0 +1,1 @@
+/Users/bleshik/configs/.vim
