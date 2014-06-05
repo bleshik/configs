@@ -2,5 +2,5 @@
     path = .vim/bundle/vim-colors-solarized
     url = https://github.com/altercation/vim-colors-solarized.git
 [submodule ".vim/bundle/vim-json"]
-    path = .vim/bundle/vim-json
-    url = https://github.com/elzr/vim-json.git
+	path = .vim/bundle/vim-json
+	url = https://github.com/elzr/vim-json.git
