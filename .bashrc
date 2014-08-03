@@ -117,5 +117,6 @@ fi
 export EDITOR=vim
 export GIT_EDITOR=vim
 source ~/.git-completion.bash
+source ~/.grails-completion.sh
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
