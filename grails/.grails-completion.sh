@@ -1,4 +1,4 @@
-export GRAILS_VERSION="$(ls -l /usr/local/bin/grails | sed -e 's/.*\([0-9].[0-9].[0-9]\).*/\1/g')"
+export GRAILS_VERSION="$(gvm current | grep grails | sed -e 's/.*\([0-9].[0-9].[0-9]\).*/\1/g')"
 
 sed_option="-E"
 
