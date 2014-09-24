@@ -1,1 +1,5 @@
 alias f='find . -name '
+alias grailsDebug='grails-debug -reloading'
+alias dbdiff='grails dbm-gorm-diff'
+#alias grails='grails -reloading'
+#alias groovy='groovy -reloading'

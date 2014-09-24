@@ -116,10 +116,15 @@ fi
 
 export EDITOR=vim
 export GIT_EDITOR=vim
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH=$PATH:$HOME/.scripts_additonal/bash
+PATH=$PATH:$HOME/.scripts/bash
+PATH=$PATH:$HOME/.git-hooks
 
 GVM_INIT=false
 [[ -s "/Users/bleshik/.gvm/bin/gvm-init.sh" ]] && source "/Users/bleshik/.gvm/bin/gvm-init.sh" && source ~/.grails-completion.sh
