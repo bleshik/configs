@@ -122,7 +122,7 @@ source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-PATH=$PATH:$HOME/.scripts_additonal/bash
+PATH=$PATH:$HOME/.scripts_additional/bash
 PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 
