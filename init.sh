@@ -14,3 +14,4 @@ ln -sFf $PWD/grails/.grails-completion.sh ~/.grails-completion.sh
 ln -sFf $PWD/scripts ~/.scripts
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
+brew install tmux
