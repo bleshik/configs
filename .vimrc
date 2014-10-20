@@ -192,7 +192,7 @@ set showmatch
         autocmd FileType tex vmap <C-N>i <ESC>i\item <ESC>
         autocmd FileType tex imap <C-N>i <ESC>i\item <ESC>i
 
-        autocmd FileType xml setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
+        autocmd FileType xml,html setlocal equalprg=xmllint\ --format\ --recover\ -\ 2>/dev/null
         autocmd FileType json setlocal equalprg=python\ -m\ json.tool\ 2>/dev/null
         autocmd FileType cshtml set filetype=html
     endif
