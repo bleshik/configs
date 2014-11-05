@@ -7,3 +7,4 @@ alias showDotFiles='defaults write com.apple.finder AppleShowAllFiles YES; killa
 alias hideDotFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 alias mysqlStart='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist'
 alias mysqlStop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist'
+alias mysqlStartUpSetUp='ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents'
