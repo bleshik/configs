@@ -10,3 +10,6 @@
 [submodule "git-hooks"]
 	path = git-hooks
 	url = https://github.com/icefox/git-hooks
+[submodule ".vim/bundle/vim-scala"]
+	path = .vim/bundle/vim-scala
+	url = https://github.com/derekwyatt/vim-scala
