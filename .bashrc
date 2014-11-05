@@ -127,4 +127,4 @@ PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 
 GVM_INIT=false
-[[ -s "/Users/bleshik/.gvm/bin/gvm-init.sh" ]] && source "/Users/bleshik/.gvm/bin/gvm-init.sh" && source ~/.grails-completion.sh
+[[ -s "/Users/bleshik/.gvm/bin/gvm-init.sh" ]] && source "/Users/bleshik/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
