@@ -1,0 +1,5 @@
+#!/bin/bash
+cd ~/K/bills
+tmux new-session -d -s 'dev_bills' -n 'bills' \;\
+     new-window \;\
+     attach
