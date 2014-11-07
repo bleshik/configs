@@ -1,5 +1,6 @@
 #!/bin/bash
 cd ~/K/bills
-tmux new-session -d -s 'dev_bills' -n 'bills' \;\
+TMUX_SESSION='dev_bills'
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'bills' \;\
      new-window \;\
      attach

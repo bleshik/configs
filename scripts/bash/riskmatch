@@ -1,6 +1,7 @@
 #!/bin/bash - 
 cd ~/K/risk
-tmux new-session -d -s 'dev_riskmatch' -n 'master-site' -c 'master-site' \;\
+TMUX_SESSION='dev_riskmatch'
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-site' -c 'master-site' \;\
      new-window -n 'master-worker' -c 'master-worker' \;\
      new-window -n 'broker-site' -c 'broker-site' \;\
      new-window -n 'broker-worker' -c 'broker-worker' \;\
