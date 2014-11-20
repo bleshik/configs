@@ -13,11 +13,11 @@ BASE=$1
 INCREMENT=$2
 
 port=$BASE
-isfree=$(netstat -talnp tcp | grep "$port\s")
+isfree=$(netstat -talnp tcp | grep "[^0-9]\+$port\s")
 
 while [[ -n "$isfree" ]]; do
     port=$[port+INCREMENT]
-    isfree=$(netstat -talnp tcp | grep "$port\s")
+    isfree=$(netstat -talnp tcp | grep "[^0-9]\+$port\s")
 done
 
 echo "$port"
