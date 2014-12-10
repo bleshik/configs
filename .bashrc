@@ -125,6 +125,8 @@ PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/.scripts_additional/bash
 PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
+PATH=$PATH:$HOME/K/risk/multi-tool
 
 GVM_INIT=false
-[[ -s "/Users/bleshik/.gvm/bin/gvm-init.sh" ]] && source "/Users/bleshik/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
+[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
