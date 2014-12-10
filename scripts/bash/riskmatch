@@ -5,6 +5,12 @@ tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-
      new-window -n 'master-worker' -c 'master-worker' \;\
      new-window -n 'broker-site' -c 'broker-site' \;\
      new-window -n 'broker-worker' -c 'broker-worker' \;\
+     new-window -n 'carrier-site' -c 'carrier-site' \;\
+     new-window -n 'carrier-worker' -c 'carrier-worker' \;\
      new-window \;\
-     send-keys -t dev_riskmatch:4 'mysql -u root' C-m \;\
+     send-keys -t $TMUX_SESSION:2 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker1"' C-m \;\
+     send-keys -t $TMUX_SESSION:3 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker-worker-1"' C-m \;\
+     send-keys -t $TMUX_SESSION:4 'export GRAILS_OPTS="$GRAILS_OPTS -Dcarrierid=carrier1"' C-m \;\
+     send-keys -t $TMUX_SESSION:5 'export GRAILS_OPTS="$GRAILS_OPTS -Dcarrierid=carrier1"' C-m \;\
+     send-keys -t $TMUX_SESSION:6 'mysql -u root' C-m \;\
      attach
