@@ -1,0 +1,5 @@
+alias dbdiff='grails dbm-gorm-diff'
+alias dropEtlDbs="mysql -uroot -e \"show databases like 'e%'\" | grep -v Database | gawk '{print \"drop database \" \$1 \";\"}' | mysql -u root"
+alias deleteEtlFolders="rm -rf ~/e1*"
+alias cleanEtl="dropEtlDbs && deleteEtlFolders"
+alias etl1="etl-tool --tunnel abalchunas@dev2-broker-etl1.int-riskmatch.com --passPhrase uw3g43"

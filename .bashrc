@@ -126,6 +126,7 @@ PATH=$PATH:$HOME/.scripts_additional/bash
 PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
+PATH=$PATH:/usr/local/bin
 
 GVM_INIT=false
 [[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh

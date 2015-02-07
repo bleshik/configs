@@ -1,0 +1,6 @@
+#!/bin/bash
+cd ~/K/where-to-buy
+TMUX_SESSION='dev_where'
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'where-to-buy' \;\
+     new-window \;\
+     attach
