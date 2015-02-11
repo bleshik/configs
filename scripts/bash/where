@@ -1,6 +1,12 @@
 #!/bin/bash
 cd ~/K/where-to-buy
 TMUX_SESSION='dev_where'
-tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'where-to-buy' \;\
+killall mongod && rm /data/db/mongod.lock
+mongod > /dev/null &
+disown
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c "$PWD/api" \;\
+     new-window -n 'extractor' -c "$PWD/extractor" \;\
+     new-window -n 'web-app' -c "$PWD/web-app" \;\
      new-window \;\
+     send-keys -t $TMUX_SESSION:3 'mongo where' C-m \;\
      attach
