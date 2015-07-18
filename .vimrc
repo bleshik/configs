@@ -10,9 +10,6 @@ call pathogen#helptags()
 silent! set runtimepath+=~/.vim/autoload
 silent! set runtimepath+=~/.vim/doc
 
-" If I'm at work (windows is dumb, can't load my plugins by himself)
-silent! set runtimepath+=C:\Users\abalchunas\Dropbox\Public\Configurations\vim\.vim
-silent! set runtimepath+=C:\Users\bleshik\Dropbox\Public\Configurations\vim\.vim
 silent! set runtimepath+=~/configs/.vim
 
 " Set dictionaries
@@ -39,11 +36,11 @@ map <silent> <m-p> :cp <cr>
 map <silent> <m-n> :cn <cr>
 
 " Chooses colorscheme and changes some colors
+"set background=light
 set background=light
-"set background=dark
 let g:solarized_contrast="high"
 let g:solarized_termcolors=256
-set t_Co=256
+"set t_Co=256
 "set term=xterm-256color
 colorscheme solarized
 
@@ -101,8 +98,9 @@ imap <Leader>x <esc>:NERDTreeClose<cr>i
 
 " toolbars suck!
 if has('gui_running')
-    set guioptions-=T
+    set guioptions-=r
     set lines=999 columns=999
+    set fullscreen
 endif
 
 "For Cyrilic
@@ -206,15 +204,14 @@ set novisualbell
 " No noise
 set noerrorbells
 " Always show status line
-set laststatus=2
+"set laststatus=2
 
 " Folding
 "set nofoldenable
 set foldmethod=indent
 " Font
 if has("gui_running")
-    "set guifont=Monaco:h12:cDEFAULTset 
-    set guifont=Consolas:h12:cDEFAULT
+    set guifont=Menlo:h10:cDEFAULT
 endif
 
 " Python-mode
@@ -251,13 +248,13 @@ imap <C-h> <ESC>:bn<CR>i
 nmap <C-S-N> :SearchWrap<CR>
 "nmap n :cnext<CR>
 
-if has('statusline')
-    set laststatus=2
+"if has('statusline')
+    "set laststatus=2
     " Broken down into easily includeable segments
-    set statusline=%<%f\    " Filename
-    set statusline+=\ [%{&ff}/%Y]            " filetype
-    set statusline+=\ [%{getcwd()}]          " current dir
-endif
+    "set statusline=%<%f\    " Filename
+    "set statusline+=\ [%{&ff}/%Y]            " filetype
+    "set statusline+=\ [%{getcwd()}]          " current dir
+"endif
 
 " encodings
 set fileencodings=utf-8,cp1251,koi8-r,ucs-2,cp866

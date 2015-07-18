@@ -13,6 +13,7 @@ ln -sFf $PWD/git-hooks ~/.git-hooks
 ln -sFf $PWD/.gradle-tab-completion.bash ~/.gradle-tab-completion.bash
 ln -sFf $PWD/grails/.grails-completion.sh ~/.grails-completion.sh
 ln -sFf $PWD/scripts ~/.scripts
+ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
 brew install tmux

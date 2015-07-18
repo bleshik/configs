@@ -1,5 +1,6 @@
 alias f='find . -name '
-alias grailsDebug='grails-debug -reloading'
+alias grailsDebug='grails-debug -reloading -Dcache=false'
+alias grailsWatch='fswatch -o -l 5 -0 . | xargs -0 -n1 -I{} grails test-app -rerun unit:'
 alias gradleDebug='gradle-debug'
 alias sbtDebug='sbt-debug'
 
@@ -16,5 +17,7 @@ alias restart_api="stop_api && start_api"
 alias stop_web-app="fleetctl destroy bills-web-app@1.service bills-web-app-update@1.service bills-web-app-update@1.timer"
 alias start_web-app="(cd ~/K/bills/coreos/; fleetctl start bills-web-app@1.service bills-web-app-update@1.service bills-web-app-update@1.timer)"
 alias restart_web-app="stop_api && start_api"
+
+alias flw="fleetctl --tunnel where00 --ssh-timeout=10"
 
 source ~/.bash_rm_aliases

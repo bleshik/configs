@@ -51,7 +51,7 @@ fi
 #else
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #fi
-export PS1="\`if [ \$? = 0 ] ; then echo '\[\e[35;1m\]\!:\[\e[32;1m\](\[\e[36;1m\]\u@\h\[\e[32;1m\]|\[\e[37;1m\]\j\[\e[32;1m\]|\[\e[37;1m\]\w\[\e[32;1m\])->\[\e[0m\]' ; else echo '\[\e[35;1m\]\!:\[\e[31;1m\](\[\e[36;1m\]\u@\h\[\e[31;1m\]|\[\e[37;1m\]\j\[\e[31;1m\]|\[\e[37;1m\]\w\[\e[31;1m\])->\[\e[0m\]' ; fi\`"
+export PS1="\`if [ \$? = 0 ] ; then echo '\[\e[35;1m\]\!:\[\e[0;32m\](\[\e[30;1m\]\u@\h\[\e[0;32m\]|\[\e[30;1m\]\j\[\e[0;32m\]|\[\e[30;1m\]\w\[\e[0;32m\])->\[\e[0m\]' ; else echo '\[\e[35;1m\]\!:\[\e[31;1m\](\[\e[30;1m\]\u@\h\[\e[31;1m\]|\[\e[30;1m\]\j\[\e[31;1m\]|\[\e[30;1m\]\w\[\e[31;1m\])->\[\e[0m\]' ; fi\`"
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -120,7 +120,9 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
+source ~/.bash_plugins/*
 
+PATH=/Applications/MacVim.app/Contents/MacOS/:$PATH
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/.scripts_additional/bash
 PATH=$PATH:$HOME/.scripts/bash
@@ -128,6 +130,6 @@ PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 
-GVM_INIT=false
-[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
+#GVM_INIT=false
+#[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
+#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
