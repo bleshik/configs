@@ -4,9 +4,12 @@ TMUX_SESSION='dev_where'
 killall mongod && rm /data/db/mongod.lock
 mongod > /dev/null &
 disown
-tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c "$PWD/api" \;\
-     new-window -n 'extractor' -c "$PWD/extractor" \;\
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c "$PWD/backend/api" \;\
+     new-window -n 'extractor' -c "$PWD/backend/extractor" \;\
      new-window -n 'web-app' -c "$PWD/web-app" \;\
+     new-window -n 'npm' -c "$PWD/web-app" \;\
+     new-window -n 'coreos' -c "$PWD/coreos" \;\
      new-window \;\
-     send-keys -t $TMUX_SESSION:3 'mongo where' C-m \;\
+     send-keys -t $TMUX_SESSION:3 'npm start' C-m \;\
+     send-keys -t $TMUX_SESSION:5 'mongo where' C-m \;\
      attach

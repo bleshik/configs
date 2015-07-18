@@ -1,0 +1,8 @@
+#!/bin/sh
+source ~/.bash_aliases
+for unit in `flw list-units | cut -f1 | tail -n+2 | sort -u | grep 'wh-.*'` ; do
+    for cmd in "$1" ; do
+        echo "flw $cmd $unit"
+        flw $cmd $unit
+    done
+done

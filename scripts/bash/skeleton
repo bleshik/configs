@@ -1,0 +1,17 @@
+#!/bin/bash
+if [ -z "$1" ] ; then
+    NAME="single-page-application-skeleton"
+else
+    NAME="$1"
+fi
+cd ~/K/$NAME
+TMUX_SESSION="dev_$NAME"
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c "$PWD/backend/api" \;\
+     new-window -n 'web-app' -c "$PWD/web-app" \;\
+     new-window -n 'npm' -c "$PWD/web-app" \;\
+     new-window -n 'coreos' -c "$PWD/coreos" \;\
+     new-window \;\
+     send-keys -t $TMUX_SESSION:2 'npm start' C-m
+if [ -z "$1" ] ; then
+    tmux attach -s $TMUX_SESSION
+fi     

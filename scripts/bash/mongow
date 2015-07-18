@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh -f -N -L 37017:where00:27017 core@where00 ; mongo 127.0.0.1:37017/where -uwhere -p "`ssh core@where00 'etcdctl get /mongo/replica/where/pwd'`"
