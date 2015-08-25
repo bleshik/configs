@@ -10,6 +10,7 @@
     lg = log -p
     d = difftool
     gb = !git --no-pager log --format=\"%H\" --decorate --all --grep=$1 | xargs -I {} sh -c \"git branch --contains {}| paste -sd ',' - && git --no-pager log --oneline --decorate {}^..{}\"
+    ro = !git clean -f */*.orig
 [difftool "Kaleidoscope"]                                                       
     cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
 [mergetool "Kaleidoscope"]                                                      
@@ -24,4 +25,4 @@
 [mergetool "fugitive"]
     cmd = vim -f -c \"Gdiff\" \"$MERGED\"
 [mergetool "vimdiff"]
-	cmd = vim -c \"/\\(<<<<<<<\\|=======\\|>>>>>>>\\).*\" \"$MERGED\"
+    cmd = vim -c \"/\\(<<<<<<<\\|=======\\|>>>>>>>\\).*\" \"$MERGED\"

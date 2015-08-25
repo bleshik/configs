@@ -129,7 +129,9 @@ PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
+PATH=$PATH:~/.gvm/grails/current/bin
 
-#GVM_INIT=false
+GVM_INIT=false
 #[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
+function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifconfig vboxnet0; ifconfig vboxnet1; ifconfig vboxnet2) | grep "inet " | cut -d ' ' -f2 | grep "$(boot2docker ip | sed -e 's/.[0-9]*$//g')"`" -v ~/multi-tool:/root/multi-tool riskmatch/multitool; }
