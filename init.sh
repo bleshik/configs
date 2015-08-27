@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd `dirname $0`
+ln -sFf $PWD/.ctags ~/.ctags
 ln -sFf $PWD/.vim ~/.vim
 ln -sFf $PWD/.vimrc ~/.vimrc
 ln -sFf $PWD/.bashrc ~/.bashrc
