@@ -3,6 +3,7 @@ set nocompatible
 filetype off 
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'henrik/vim-qargs'
 Plugin 'JavaImp.vim--Lee'
 Plugin 'camelcasemotion'
 Plugin 'jeetsukumaran/vim-indentwise'
