@@ -1,8 +1,16 @@
+" TODO:
+" 1) Copy full class name shortcut
+" 2) IDEA-like automatic identation on closing }
+"
 " Get Vundle up and running
+let g:python_host_prog='/usr/local/bin/python'
 set nocompatible
-filetype off 
+filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'vim-scripts/groovyindent'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'bleshik/vim-vebugger'
 Plugin 'henrik/vim-qargs'
 Plugin 'JavaImp.vim--Lee'
 Plugin 'camelcasemotion'
@@ -52,17 +60,17 @@ set tabstop=4 shiftwidth=4 expandtab
 " make backspace work
 set backspace=indent,eol,start
 
-" switch files without saving 
+" switch files without saving
 set hidden
 
 " disable folding
 set nofoldenable
 
 " Chooses colorscheme and changes some colors
-set background=light
 let g:solarized_contrast="high"
 let g:solarized_termcolors=256
 colorscheme solarized
+set background=light
 
 " Highlights when searches
 set hlsearch
@@ -73,7 +81,7 @@ set incsearch
 " Register doesn't matter
 set ic
 
-" Enables lines numbers 
+" Enables lines numbers
 set nu
 
 " Ruler on
@@ -158,7 +166,7 @@ set encoding=utf-8
 set tm=200
 
 " ESC on jk
-imap jk <c-c>:w<cr>
+imap jk <c-c>:call StripTrailingWhitespaces()<cr>:w<cr>
 vmap jk <c-c>
 
 " Make command line two lines high
@@ -242,7 +250,7 @@ nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 function! ImportClass(identifier)
   let tags = taglist(a:identifier)
   if (len(tags) > 0)
-    let cmd = 'cat ' . tags[0].filename . ' | grep package | head -n1 | sed -e "s/^ *package *\(.*\) *;* */\1/g" | tr "\n" "."'
+    let cmd = 'cat ' . tags[0].filename . ' | grep package| head -n1 | sed -e "s/^ *package *\(.*\) */\1/g" | sed -e "s/;//g" | tr "\n" "."'
     let package = system(cmd)
     let suffix = ""
     if (&filetype == "java")
@@ -280,7 +288,7 @@ endfunction
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
 let g:agprg = '/usr/local/bin/ag --ignore=*.log --ignore=*.log.* --ignore-dir=target --ignore-dir=third-party --vimgrep'
 
-nmap ,sr :AgProjectRoot 
+nmap ,sr :AgProjectRoot
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
 
 "-----------------------------------------------------------------------------
@@ -325,6 +333,7 @@ nmap ,ff :CtrlP .<cr>
 nmap ,fF :execute ":CtrlP " . expand('%:p:h')<cr>
 nmap ,fr :CtrlP<cr>
 nmap ,fm :CtrlPMixed<cr>
+nmap ,fl :CtrlPLine<cr>
 
 "-----------------------------------------------------------------------------
 " Gundo Settings
@@ -335,11 +344,15 @@ nmap <c-F5> :GundoToggle<cr>
 " EasyTags
 "-----------------------------------------------------------------------------
 nmap <C-]> :execute ":tag /" . expand("<cword>")<cr>
+" Do not update tags automatically
+let g:easytags_events = []
 let g:easytags_file = '~/.vimtags'
-set tags=~/.vimtags;
+set tags=./.vimtags;,.vimtags;
+set cpoptions+=d
+let g:easytags_dynamic_files = 2
 let g:home_code_dir = '/Users/bleshik/K'
 let g:easytags_async = 1
-let g:easytags_auto_highlight = 1
+let g:easytags_auto_highlight = 0
 let g:easytags_languages = {
 \   'groovy': {
 \   }
@@ -368,6 +381,13 @@ function! FindGitDirOrRoot()
   else
     return '/'
   endif
+endfunction
+
+function! StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -421,13 +441,13 @@ function! UpdateGrailsTags()
 endfunction
 
 "-----------------------------------------------------------------------------
-" UtilSnips 
+" UtilSnips
 "-----------------------------------------------------------------------------
 let g:UltiSnipsExpandTrigger="<tab>"
 " UltiSnips completion function that tries to expand a snippet. If there's no
 " snippet for expanding, it checks for completion window and if it's
 " shown, selects first element. If there's no completion window it tries to
-" jump to next placeholder. If there's no placeholder it just returns TAB key 
+" jump to next placeholder. If there's no placeholder it just returns TAB key
 function! g:UltiSnips_Complete()
     call UltiSnips#ExpandSnippet()
     if g:ulti_expand_res == 0
@@ -449,7 +469,7 @@ au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:U
 "-----------------------------------------------------------------------------
 let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
 let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
-let g:ycm_collect_identifiers_from_tags_files = 1
+"let g:ycm_collect_identifiers_from_tags_files = 1
 
 "-----------------------------------------------------------------------------
 " Hard Mode
