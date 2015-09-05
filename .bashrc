@@ -129,7 +129,11 @@ PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
-PATH=$PATH:~/.gvm/grails/current/bin
+
+function grails {
+    export JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`"
+    ~/.gvm/grails/current/bin/grails -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD &>/dev/null || echo target`" "$@"
+}
 
 GVM_INIT=false
 #[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh

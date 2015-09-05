@@ -1,5 +1,5 @@
 alias f='find . -name '
-alias grailsDebug='grails-debug -reloading -Dcache=false'
+alias grailsDebug='grails -reloading -Dcache=false'
 alias grailsWatch='grails test-app -rerun unit: ; fswatch -o -l 5 -0 . | xargs -0 -n1 -I{} grails test-app -rerun unit:'
 alias gradleDebug='gradle-debug'
 alias sbtDebug='sbt-debug'
