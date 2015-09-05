@@ -1,7 +1,3 @@
-" TODO:
-" 1) Copy full class name shortcut
-" 2) IDEA-like automatic identation on closing }
-"
 " Get Vundle up and running
 let g:python_host_prog='/usr/local/bin/python'
 set nocompatible
@@ -92,6 +88,10 @@ set cpoptions+=$
 
 " Copy current file path
 nmap cp :let @" = expand("%")<CR>:call system("pbcopy", getreg("\""))<CR>
+" Same, but with line number
+nmap cl :let @" = expand("%")<CR>:call system("pbcopy", getreg("\"").":".line("."))<CR>
+" Copy Java canonical class name
+autocmd FileType java,groovy nmap cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
 " To use system clipboard
 " On OSX
@@ -166,7 +166,7 @@ set encoding=utf-8
 set tm=200
 
 " ESC on jk
-imap jk <c-c>:call StripTrailingWhitespaces()<cr>:w<cr>
+imap jk <c-c>:w<cr>
 vmap jk <c-c>
 
 " Make command line two lines high
@@ -246,19 +246,6 @@ nnoremap <F1> @<Esc>kyWjPA<BS>
 inoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 
-" imports java/groovy class under cursor using tags
-function! ImportClass(identifier)
-  let tags = taglist(a:identifier)
-  if (len(tags) > 0)
-    let cmd = 'cat ' . tags[0].filename . ' | grep package| head -n1 | sed -e "s/^ *package *\(.*\) */\1/g" | sed -e "s/;//g" | tr "\n" "."'
-    let package = system(cmd)
-    let suffix = ""
-    if (&filetype == "java")
-      suffix = ";"
-    endif
-    call append(2, "import " . package . tags[0].name . suffix)
-  endif
-endfunction
 nmap ,i :execute ":call ImportClass('" . expand("<cword>") . "')" <CR>
 
 "-----------------------------------------------------------------------------
@@ -288,7 +275,7 @@ endfunction
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
 let g:agprg = '/usr/local/bin/ag --ignore=*.log --ignore=*.log.* --ignore-dir=target --ignore-dir=third-party --vimgrep'
 
-nmap ,sr :AgProjectRoot
+nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
 
 "-----------------------------------------------------------------------------
@@ -347,7 +334,7 @@ nmap <C-]> :execute ":tag /" . expand("<cword>")<cr>
 " Do not update tags automatically
 let g:easytags_events = []
 let g:easytags_file = '~/.vimtags'
-set tags=./.vimtags;,.vimtags;
+set tags=~/.vimtags,./.vimtags;~/.vimtags,.vimtags;
 set cpoptions+=d
 let g:easytags_dynamic_files = 2
 let g:home_code_dir = '/Users/bleshik/K'
@@ -388,6 +375,24 @@ function! StripTrailingWhitespaces()
     let c = col(".")
     %s/\s\+$//e
     call cursor(l, c)
+endfunction
+
+function! GetPackage(file)
+    let cmd = 'cat ' . a:file . ' | grep package| head -n1 | sed -e "s/^ *package *\(.*\) */\1/g" | sed -e "s/;//g" | xargs echo -n'
+    return system(cmd)
+endfunction
+
+" imports java/groovy class under cursor using tags
+function! ImportClass(identifier)
+  let tags = taglist(a:identifier)
+  if (len(tags) > 0)
+    let package = GetPackage(tags[0].filename)
+    let suffix = ""
+    if (&filetype == "java")
+      suffix = ";"
+    endif
+    call append(2, "import " . package . "." . tags[0].name . suffix)
+  endif
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -478,7 +483,27 @@ autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
 nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
 
 "-----------------------------------------------------------------------------
+" Howdoi
+"-----------------------------------------------------------------------------
+map ,,h <Plug>Howdoi
+
+"-----------------------------------------------------------------------------
 " JavaImp
 "-----------------------------------------------------------------------------
 "let g:JavaImpDataDir = $HOME . "/.JavaImp.vim"
 "let g:JavaImpPaths = system('find ~/K/risk -maxdepth 3 -type d | grep "classes" | tr "\n" "," | sed -e "s/,$//g"')
+
+"-----------------------------------------------------------------------------
+" camelcasemotion
+"-----------------------------------------------------------------------------
+nmap ,dw  v,wd
+nmap ,db  v,bd
+
+"-----------------------------------------------------------------------------
+" vebugger 
+"-----------------------------------------------------------------------------
+let g:vebugger_leader=',d'
+let g:vebugger_use_tags=1
+command! -nargs=1 VBGstartJdbWithPort call vebugger#jdb#start({'con': str2nr(string(<q-args>))})
+nmap ,ds :VBGstartJdbWithPort 
+nmap ,dk :VBGkill<CR>
