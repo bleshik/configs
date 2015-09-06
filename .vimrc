@@ -91,7 +91,10 @@ nmap cp :let @" = expand("%")<CR>:call system("pbcopy", getreg("\""))<CR>
 " Same, but with line number
 nmap cl :let @" = expand("%")<CR>:call system("pbcopy", getreg("\"").":".line("."))<CR>
 " Copy Java canonical class name
-autocmd FileType java,groovy nmap cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+autocmd FileType java,groovy nmap cc :let @" = s:getPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+
+" IDEA-like formatting after inserting } character
+autocmd FileType java,groovy inoremap } }<C-C>V[{=''a
 
 " To use system clipboard
 " On OSX
@@ -377,16 +380,34 @@ function! StripTrailingWhitespaces()
     call cursor(l, c)
 endfunction
 
-function! GetPackage(file)
-    let cmd = 'cat ' . a:file . ' | grep package| head -n1 | sed -e "s/^ *package *\(.*\) */\1/g" | sed -e "s/;//g" | xargs echo -n'
-    return system(cmd)
+function! s:getPackage(filename)
+	for l:line in readfile(a:filename)
+    " trailing ; is optional to make it work for groovy as well
+		let l:matches=matchlist(l:line,'\vpackage\s+(%(\w|\.)+)\s*;?')
+		if 1<len(l:matches)
+			return l:matches[1]
+		endif
+	endfor
+	return l:className
+endfunction
+
+function! GuessPackage(filename)
+    let l:stopWords = [ "services", "controllers", "src", fnamemodify(a:filename, ":e") ]
+    let l:package = ""
+    for l:dirname in reverse(split(fnamemodify(a:filename, ":p:h"), "/"))
+        if index(l:stopWords, l:dirname) >= 0
+            return l:package
+        endif
+        let l:package = len(l:package) > 0 ? l:dirname.".".l:package : l:dirname
+    endfor
+    return l:package
 endfunction
 
 " imports java/groovy class under cursor using tags
 function! ImportClass(identifier)
   let tags = taglist(a:identifier)
   if (len(tags) > 0)
-    let package = GetPackage(tags[0].filename)
+    let package = s:getPackage(tags[0].filename)
     let suffix = ""
     if (&filetype == "java")
       suffix = ";"
@@ -502,8 +523,11 @@ nmap ,db  v,bd
 "-----------------------------------------------------------------------------
 " vebugger 
 "-----------------------------------------------------------------------------
-let g:vebugger_leader=',d'
+let g:vebugger_leader=',v'
 let g:vebugger_use_tags=1
-command! -nargs=1 VBGstartJdbWithPort call vebugger#jdb#start({'con': str2nr(string(<q-args>))})
-nmap ,ds :VBGstartJdbWithPort 
-nmap ,dk :VBGkill<CR>
+function! s:attachJDB(port)
+    call vebugger#jdb#start({'con': a:port})
+endfunction
+command! -nargs=1 VBGattachJdb call s:attachJDB(<q-args>)
+autocmd FileType java,groovy nmap ,vs :VBGattachJdb 5005
+nmap ,vk :VBGkill<CR>
