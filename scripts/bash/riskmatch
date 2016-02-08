@@ -7,7 +7,7 @@ tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-
      new-window -n 'broker-worker' -c "$PWD/broker-worker" \;\
      new-window -n 'carrier-site' -c "$PWD/carrier-site" \;\
      new-window -n 'carrier-worker' -c "$PWD/carrier-worker" \;\
-     new-window -n 'multi-tool' -c "$PWD/multi-tool" \;\
+     new-window -n 'carriercalc-worker' -c "$PWD/carriercalc-worker" \;\
      new-window \;\
      send-keys -t $TMUX_SESSION:2 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker1"' C-m \;\
      send-keys -t $TMUX_SESSION:3 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker-worker-1"' C-m \;\

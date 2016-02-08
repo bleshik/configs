@@ -1,9 +1,0 @@
-#!/bin/bash
-cd `dirname $0`
-killall mongod && rm /data/db/mongod.lock
-mongod > /dev/null &
-disown
-source skeleton crossover-notifier
-tmux new-window -t $TMUX_SESSION \;\
-     send-keys -t $TMUX_SESSION:4 'mongo crossover' C-m \;\
-     attach

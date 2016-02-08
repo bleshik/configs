@@ -120,7 +120,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
-source ~/.bash_plugins/*
+[[ -d "~/.bash_plugin" ]] && source ~/.bash_plugins/*
 
 PATH=/Applications/MacVim.app/Contents/MacOS/:$PATH
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
@@ -131,11 +131,22 @@ PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 
 function grails {
-    export JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`"
-    ~/.gvm/grails/current/bin/grails -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD &>/dev/null || echo target`" "$@"
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`"
+}
+
+function groovy {
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/groovy/current/bin/groovy "$@"
+}
+
+function groovysh {
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/groovy/current/bin/groovysh "$@"
 }
 
 GVM_INIT=false
-#[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
+[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
 function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifconfig vboxnet0; ifconfig vboxnet1; ifconfig vboxnet2) | grep "inet " | cut -d ' ' -f2 | grep "$(boot2docker ip | sed -e 's/.[0-9]*$//g')"`" -v ~/multi-tool:/root/multi-tool riskmatch/multitool; }
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/Users/bleshik/.sdkman"
+[[ -s "/Users/bleshik/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/bleshik/.sdkman/bin/sdkman-init.sh"

@@ -1,8 +1,8 @@
 #!/bin/bash
-if [ -z "$1" ] ; then
+if [ -z "$@" ] ; then
     NAME="single-page-application-skeleton"
 else
-    NAME="$1"
+    NAME="$@"
 fi
 cd ~/K/$NAME
 TMUX_SESSION="dev_$NAME"
@@ -12,6 +12,6 @@ tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c
      new-window -n 'coreos' -c "$PWD/coreos" \;\
      new-window \;\
      send-keys -t $TMUX_SESSION:2 'npm start' C-m
-if [ -z "$1" ] ; then
+if [ -z "$@" ] ; then
     tmux attach -s $TMUX_SESSION
 fi     

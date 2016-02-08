@@ -4,6 +4,9 @@ set nocompatible
 filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
+Plugin 'tpope/vim-commentary'
+Plugin 'junegunn/vim-easy-align'
+Plugin 'tpope/vim-ragtag'
 Plugin 'vim-scripts/groovyindent'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'bleshik/vim-vebugger'
@@ -17,14 +20,14 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+Plugin 'bleshik/vim-snippets'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'bleshik/grails-vim'
+"Plugin 'bleshik/grails-vim'
 Plugin 'xolox/vim-easytags'
 Plugin 'rking/ag.vim'
 Plugin 'bufkill.vim'
 Plugin 'MarcWeber/vim-addon-completion'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'EasyMotion'
 Plugin 'derekwyatt/vim-fswitch'
 Plugin 'tpope/vim-fugitive'
@@ -90,11 +93,24 @@ set cpoptions+=$
 nmap cp :let @" = expand("%")<CR>:call system("pbcopy", getreg("\""))<CR>
 " Same, but with line number
 nmap cl :let @" = expand("%")<CR>:call system("pbcopy", getreg("\"").":".line("."))<CR>
+" Create a new file in the same directory
+nmap cn :let @" = expand("%:h")<CR>:e <C-R>"/
 " Copy Java canonical class name
-autocmd FileType java,groovy nmap cc :let @" = s:getPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+autocmd FileType java,groovy nmap <buffer> cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
 " IDEA-like formatting after inserting } character
-autocmd FileType java,groovy inoremap } }<C-C>V[{=''a
+autocmd FileType java,groovy inoremap <buffer> } }<C-C>m'V[{=`'a
+
+" Couldn't make such a snippet
+autocmd FileType java,groovy inoremap <buffer> ,l private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
+autocmd FileType java,groovy nmap <buffer> ,l o,l<C-C>
+
+" Jump to the base class
+autocmd FileType java,groovy nnoremap <buffer> <C-P> /extends\\|implements<CR>:nohls<CR>w<C-]>
+
+" Shortcut for replacing the selected word
+vmap ,r y<C-C>:%s/<C-R>"//g<LEFT><LEFT>
+nmap ,r ebve,r
 
 " To use system clipboard
 " On OSX
@@ -144,14 +160,6 @@ set noerrorbells
 if has("gui_running")
     set guifont=Menlo:h10:cDEFAULT
 endif
-
-" CtrlP plugin
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn|idea)$',
-  \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore)$',
-  \ 'link': 'some_bad_symbolic_links'
-  \ }
 
 " buffers
 nmap <C-l> :bn<CR>
@@ -203,8 +211,11 @@ nmap <silent> ,wa :call BWipeoutAll()<cr>
 
 " cd to the directory containing the file in the buffer
 nmap <silent> ,cd :lcd %:h<CR>
-nmap <silent> ,cr :lcd <c-r>=FindGitDirOrRoot()<cr><cr>
+nmap <silent> ,cr :lcd <c-r>=FindGitDirOrCurrent()<cr><cr>
 nmap <silent> ,md :silent !mkdir -p %:p:h<CR>
+
+" remove the current file
+nmap <silent> ,rm :call delete(expand("%"))<CR>:bdelete!<CR>
 
 " Turn off that stupid highlight search
 nmap <silent> ,n :nohls<CR>
@@ -241,7 +252,7 @@ nnoremap ,t :call NumberToggle()<cr>
 
 " add E command so that I can easily create a file with its directories,
 " which is especially relevant in java with its package conventions
-au BufNewFile * :exe ': !mkdir -p ' . escape(fnamemodify(bufname('%'),':p:h'),'#% \\')
+au BufNewFile * :silent exe ': !mkdir -p ' . escape(fnamemodify(bufname('%'),':p:h'),'#% \\')
 
 " copies the line above word by word
 inoremap <F1> @<Esc>kyWjPA<BS>
@@ -270,13 +281,13 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " AG (SilverSearcher) Settings
 "-----------------------------------------------------------------------------
 function! AgProjectRoot(pattern)
-  echom a:pattern
-  let dir = FindGitDirOrRoot()
-  execute ':Ag ' . a:pattern . ' ' . dir
+  let l:dir = FindGitDirOrCurrent()
+  echom a:pattern . " in " . l:dir
+  execute ':Ag ' . a:pattern . ' "' . dir . '"'
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let g:agprg = '/usr/local/bin/ag --ignore=*.log --ignore=*.log.* --ignore-dir=target --ignore-dir=third-party --vimgrep'
+let g:ag_prg = '/usr/local/bin/ag --ignore-dir=target --ignore=.vimtags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -293,37 +304,6 @@ nmap <silent> ,ok :FSAbove<CR>
 nmap <silent> ,oK :FSSplitAbove<CR>
 nmap <silent> ,oj :FSBelow<CR>
 nmap <silent> ,oJ :FSSplitBelow<CR>
-
-"-----------------------------------------------------------------------------
-" CtrlP Settings
-"-----------------------------------------------------------------------------
-let g:ctrlp_switch_buffer = 'E'
-let g:ctrlp_tabpage_position = 'c'
-let g:ctrlp_working_path_mode = 'rc'
-"let g:ctrlp_root_markers = ['.project.root']
-"let g:ctrlp_custom_ignore = '\v'
-"let g:ctrlp_custom_ignore .= '%(/\.'
-"let g:ctrlp_custom_ignore .= '%(git|hg|svn)|'
-"let g:ctrlp_custom_ignore .= '\.%(class|o|png|jpg|jpeg|bmp|tar|jar|tgz|deb|zip|xml|html)$|'
-"let g:ctrlp_custom_ignore .= '/target/%(quickfix|resolution-cache|streams)|'
-"let g:ctrlp_custom_ignore .= '/target/scala-2.1./%(classes|test-classes|sbt-0.13|cache)|'
-"let g:ctrlp_custom_ignore .= '/project/target|/project/project'
-"let g:ctrlp_custom_ignore .= ')'
-let g:ctrlp_open_new_file = 'r'
-let g:ctrlp_open_multiple_files = '1ri'
-let g:ctrlp_match_window = 'max:40'
-let g:ctrlp_prompt_mappings = {
-  \ 'PrtSelectMove("j")':   ['<c-n>'],
-  \ 'PrtSelectMove("k")':   ['<c-p>'],
-  \ 'PrtHistory(-1)':       ['<c-j>', '<down>'],
-  \ 'PrtHistory(1)':        ['<c-i>', '<up>']
-\ }
-nmap ,fb :CtrlPBuffer<cr>
-nmap ,ff :CtrlP .<cr>
-nmap ,fF :execute ":CtrlP " . expand('%:p:h')<cr>
-nmap ,fr :CtrlP<cr>
-nmap ,fm :CtrlPMixed<cr>
-nmap ,fl :CtrlPLine<cr>
 
 "-----------------------------------------------------------------------------
 " Gundo Settings
@@ -358,18 +338,18 @@ function! BWipeoutAll()
   unlet lastbuf
 endfunction
 
-function! FindGitDirOrRoot()
+function! FindGitDirOrCurrent()
   let filedir = expand('%:p:h')
   if isdirectory(filedir)
     let cmd = 'bash -c "(cd ' . filedir . '; git rev-parse --show-toplevel 2>/dev/null)"'
     let gitdir = system(cmd)
     if strlen(gitdir) == 0
-      return g:home_code_dir
+      return getcwd()
     else
       return gitdir[:-2] " chomp
     endif
   else
-    return '/'
+    return getcwd() 
   endif
 endfunction
 
@@ -380,7 +360,7 @@ function! StripTrailingWhitespaces()
     call cursor(l, c)
 endfunction
 
-function! s:getPackage(filename)
+function! GetPackage(filename)
 	for l:line in readfile(a:filename)
     " trailing ; is optional to make it work for groovy as well
 		let l:matches=matchlist(l:line,'\vpackage\s+(%(\w|\.)+)\s*;?')
@@ -392,28 +372,61 @@ function! s:getPackage(filename)
 endfunction
 
 function! GuessPackage(filename)
-    let l:stopWords = [ "services", "controllers", "src", fnamemodify(a:filename, ":e") ]
+    let l:stopWords = [ "domain", "taglib", "integration", "unit", "services", "controllers", "jobs", "groovy", "java", fnamemodify(a:filename, ":e") ]
+    let l:packageStarted = 0
     let l:package = ""
-    for l:dirname in reverse(split(fnamemodify(a:filename, ":p:h"), "/"))
-        if index(l:stopWords, l:dirname) >= 0
-            return l:package
+    for l:dirname in split(fnamemodify(a:filename, ":p:h"), "/")
+        if l:packageStarted
+            let l:package = len(l:package) > 0 ? l:package.".".l:dirname : l:dirname
         endif
-        let l:package = len(l:package) > 0 ? l:dirname.".".l:package : l:dirname
+        let l:packageStarted = l:packageStarted || index(l:stopWords, l:dirname) >= 0
     endfor
     return l:package
 endfunction
 
+function! GrailsTestFilename(sourceFile, suffix, testType)
+    let l:stopWords = [ "grails-app", "src" ]
+    let l:grailsAppDir = ""
+    for l:dirname in split(fnamemodify(a:sourceFile, ":p:h"), "/")
+        if index(l:stopWords, l:dirname) >= 0
+            break
+        endif
+        let l:grailsAppDir = l:grailsAppDir . "/" . l:dirname
+    endfor
+    return l:grailsAppDir . "/test/" . a:testType . "/" . tr(GuessPackage(a:sourceFile), ".", "/") . "/" . fnamemodify(a:sourceFile, ":t:r") . a:suffix . "." . fnamemodify(a:sourceFile, ":e")
+endfunction
+
 " imports java/groovy class under cursor using tags
 function! ImportClass(identifier)
-  let tags = taglist(a:identifier)
-  if (len(tags) > 0)
-    let package = s:getPackage(tags[0].filename)
-    let suffix = ""
-    if (&filetype == "java")
-      suffix = ";"
-    endif
-    call append(2, "import " . package . "." . tags[0].name . suffix)
+  for l:keyword in [ "class", "interface", "trait", "enum"]
+      let l:tag = s:getTagContainingString(a:identifier, "", l:keyword."\\s\\+".a:identifier."\\W", 1)
+      if (len(l:tag) > 0)
+        echom l:tag.filename
+        let l:package = GetPackage(l:tag.filename)
+        let l:suffix = ""
+        if (&filetype == "java")
+          let l:suffix = ";"
+        endif
+        call append(2, "import " . l:package . "." . l:tag.name . l:suffix)
+        return
+      endif
+  endfor
+  echom a:identifier." was not found"
+endfunction
+
+function! s:getTagContainingString(id, language, str, include)
+  let l:tags = taglist(a:id)
+  if (len(l:tags) > 0)
+    for l:tag in l:tags
+        if ((len(a:language) <= 0 || tolower(a:language) == tolower(l:tag.language)) &&
+            \filereadable(l:tag.filename) &&
+            \(a:include && match(readfile(l:tag.filename), a:str) >= 0 ||
+            \!a:include && match(readfile(l:tag.filename), a:str) < 0))
+        return l:tag
+      endif
+    endfor
   endif
+  return {}
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -456,11 +469,16 @@ iab Taht       That
 iab taht       that
 iab Teh        The
 iab teh        the
+iab recieve    receive
+iab Recieve    Receive
 
 "-----------------------------------------------------------------------------
 " Grails
 "-----------------------------------------------------------------------------
 let g:grails_tests_suffix = "Spec"
+
+nnoremap ,gt :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'unit')<CR>:e <C-R>"<CR>
+nnoremap ,gti :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'integration')<CR>:e <C-R>"<CR>
 
 function! UpdateGrailsTags()
     system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i/../; grails refresh-dependencies --include-source 2>&1 >> /tmp/vim-grails-refresh.log) ; done && for i in `find ~/.gvm/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 >> /tmp/vim-grails-refresh.log ; done) &')
@@ -477,12 +495,12 @@ let g:UltiSnipsExpandTrigger="<tab>"
 function! g:UltiSnips_Complete()
     call UltiSnips#ExpandSnippet()
     if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
+        call UltiSnips#JumpForwards()
+        if g:ulti_jump_forwards_res == 0
+            if pumvisible()
+                return "\<C-n>"
+            else
+                return "\<TAB>"
             endif
         endif
     endif
@@ -500,6 +518,8 @@ let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
 "-----------------------------------------------------------------------------
 " Hard Mode
 "-----------------------------------------------------------------------------
+" no arrows
+let g:HardMode_level = "wannabe"
 autocmd VimEnter,BufNewFile,BufReadPost * silent! call HardMode()
 nnoremap <leader>h <Esc>:call ToggleHardMode()<CR>
 
@@ -531,3 +551,43 @@ endfunction
 command! -nargs=1 VBGattachJdb call s:attachJDB(<q-args>)
 autocmd FileType java,groovy nmap ,vs :VBGattachJdb 5005
 nmap ,vk :VBGkill<CR>
+
+"-----------------------------------------------------------------------------
+" CtrlP
+"-----------------------------------------------------------------------------
+let g:ctrlp_cache_dir           = $HOME . '/.cache/ctrlp'
+let g:ctrlp_max_files           = 0
+let g:ctrlp_switch_buffer       = 'E'
+let g:ctrlp_tabpage_position    = 'c'
+let g:ctrlp_working_path_mode   = 'rc'
+let g:ctrlp_open_new_file       = 'r'
+let g:ctrlp_open_multiple_files = '1ri'
+let g:ctrlp_match_window        = 'max:40'
+let g:ctrlp_prompt_mappings     = {
+  \ 'PrtSelectMove("j")':   ['<c-n>'],
+  \ 'PrtSelectMove("k")':   ['<c-p>'],
+  \ 'PrtHistory(-1)':       ['<c-j>', '<down>'],
+  \ 'PrtHistory(1)':        ['<c-i>', '<up>']
+\ }
+nmap ,fb :CtrlPBuffer<cr>
+nmap ,ff :CtrlP .<cr>
+nmap ,fF :execute ':CtrlP ' . expand('%:p:h')<cr>
+nmap ,fr :CtrlP<cr>
+nmap ,fm :CtrlPMixed<cr>
+nmap ,fl :CtrlPLine<cr>
+nmap ,fe :CtrlP 
+let g:ctrlp_map = ',ff'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|third-party)$',
+  \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
+  \ 'link': 'some_bad_symbolic_links'
+  \ }
+
+"-----------------------------------------------------------------------------
+" EasyAlign
+"-----------------------------------------------------------------------------
+" Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
+vmap = <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)

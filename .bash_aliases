@@ -1,6 +1,6 @@
 alias f='find . -name '
 alias grailsDebug='grails -reloading -Dcache=false'
-alias grailsWatch='grails test-app -rerun unit: ; fswatch -o -l 5 -0 . | xargs -0 -n1 -I{} grails test-app -rerun unit:'
+alias grailsWatch='grails test-app unit: ; while true ; do echo "---" && fswatch -i .*.java -i .*.groovy -o -1 -0 . | xargs -0 -n1 -I{} grails test-app -rerun unit: ; done'
 alias gradleDebug='gradle-debug'
 alias sbtDebug='sbt-debug'
 
@@ -9,6 +9,11 @@ alias hideDotFiles='defaults write com.apple.finder AppleShowAllFiles NO; killal
 alias mysqlStart='launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist'
 alias mysqlStop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist'
 alias mysqlStartUpSetUp='ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents'
+alias postgresStart='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
+alias postgresStop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
+alias mysql="altsql"
+
+alias toDate='date -r'
 
 alias stop_api="fleetctl destroy bills-api@1.service bills-api-update@1.service bills-api-update@1.timer"
 alias start_api="(cd ~/K/bills/coreos/; fleetctl start bills-api@1.service bills-api-update@1.service bills-api-update@1.timer)"

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd `dirname $0`
+ln -sFf $PWD/.inputrc ~/.inputrc
 ln -sFf $PWD/.ctags ~/.ctags
 ln -sFf $PWD/.vim ~/.vim
 ln -sFf $PWD/.vimrc ~/.vimrc
@@ -19,3 +20,5 @@ ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
 brew install tmux
+brew install cpanm
+sudo cpanm App::AltSQL
