@@ -51,7 +51,7 @@ fi
 #else
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #fi
-export PS1="\`if [ \$? = 0 ] ; then echo '\[\e[35;1m\]\!:\[\e[0;32m\](\[\e[30;1m\]\u@\h\[\e[0;32m\]|\[\e[30;1m\]\j\[\e[0;32m\]|\[\e[30;1m\]\w\[\e[0;32m\])->\[\e[0m\]' ; else echo '\[\e[35;1m\]\!:\[\e[31;1m\](\[\e[30;1m\]\u@\h\[\e[31;1m\]|\[\e[30;1m\]\j\[\e[31;1m\]|\[\e[30;1m\]\w\[\e[31;1m\])->\[\e[0m\]' ; fi\`"
+PS1="\`if [ \$? = 0 ] ; then echo '\[\e[35;1m\]\!:\[\e[0;32m\](\[\e[30;1m\]\u@\h\[\e[0;32m\]|\[\e[30;1m\]\j\[\e[0;32m\]|\[\e[30;1m\]\w\[\e[0;32m\])->\[\e[0m\]' ; else echo '\[\e[35;1m\]\!:\[\e[31;1m\](\[\e[30;1m\]\u@\h\[\e[31;1m\]|\[\e[30;1m\]\j\[\e[31;1m\]|\[\e[30;1m\]\w\[\e[31;1m\])->\[\e[0m\]' ; fi\`"
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
