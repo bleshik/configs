@@ -45,6 +45,7 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'VisIncr'
 Plugin 'GEverding/vim-hocon'
 Plugin 'xolox/vim-misc'
+Plugin 'henrik/rename.vim'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -90,11 +91,17 @@ set ruler
 set cpoptions+=$
 
 " Copy current file path
-nmap cp :let @" = expand("%")<CR>:call system("pbcopy", getreg("\""))<CR>
+nmap ,cp :let @a = expand("%")<CR>:call system("pbcopy", getreg("a"))<CR>
 " Same, but with line number
-nmap cl :let @" = expand("%")<CR>:call system("pbcopy", getreg("\"").":".line("."))<CR>
+nmap ,cl :let @a = expand("%")<CR>:call system("pbcopy", getreg("a").":".line("."))<CR>
 " Create a new file in the same directory
-nmap cn :let @" = expand("%:h")<CR>:e <C-R>"/
+nmap ,cn :let @a = expand("%:h")<CR>:e <C-R>a/
+" Move the current file
+command! -nargs=* -complete=file -bang MoveTo call Rename(<q-args>, '<bang>')
+nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
+" Copy the current file
+command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
+nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
 autocmd FileType java,groovy nmap <buffer> cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
@@ -191,6 +198,8 @@ set showmode
 
 " Disable it... every time I hit the limit I unset this anyway. It's annoying
 set textwidth=0
+" Highlight the 121th column as a recommendation for maximum amount of characters in single line for code
+autocmd FileType java,groovy,javascript,coffeescript,scala setlocal colorcolumn=121
 
 " When completing by tag, show the whole tag, not just the function name
 set showfulltag
@@ -331,6 +340,11 @@ let g:easytags_languages = {
 "-----------------------------------------------------------------------------
 " Functions
 "-----------------------------------------------------------------------------
+function! s:copyCurrentFileTo(name)
+    silent! call mkdir(fnamemodify(a:name, ":p:h"), 'p')
+    exe 'saveas! ' . a:name
+endfunction
+
 function! BWipeoutAll()
   let lastbuf = bufnr('$')
   let ids = sort(filter(range(1, bufnr('$')), 'bufexists(v:val)'))

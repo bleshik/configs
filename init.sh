@@ -20,6 +20,4 @@ ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
 brew install tmux
-brew install cpanm
 brew install bash
-sudo cpanm App::AltSQL

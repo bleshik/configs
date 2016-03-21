@@ -11,7 +11,6 @@ alias mysqlStop='launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.mysql.pli
 alias mysqlStartUpSetUp='ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents'
 alias postgresStart='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log start'
 alias postgresStop='pg_ctl -D /usr/local/var/postgres stop -s -m fast'
-alias mysql="altsql"
 
 alias toDate='date -r'
 
