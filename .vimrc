@@ -103,17 +103,20 @@ nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
 command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
 nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
-autocmd FileType java,groovy nmap <buffer> cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+autocmd FileType java,groovy,scala nmap <buffer> cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
 " IDEA-like formatting after inserting } character
-autocmd FileType java,groovy inoremap <buffer> } }<C-C>m'V[{=`'a
+autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
 
 " Couldn't make such a snippet
-autocmd FileType java,groovy inoremap <buffer> ,l private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
-autocmd FileType java,groovy nmap <buffer> ,l o,l<C-C>
+autocmd FileType java,groovy,scala inoremap <buffer> ,l private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
+autocmd FileType java,groovy,scala nmap <buffer> ,l o,l<C-C>
 
 " Jump to the base class
-autocmd FileType java,groovy nnoremap <buffer> <C-P> /extends\\|implements<CR>:nohls<CR>w<C-]>
+autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /extends\\|implements<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
+
+" JSON format shortcut
+autocmd FileType json nmap =j :%!python -m json.tool<CR>
 
 " Shortcut for replacing the selected word
 vmap ,r y<C-C>:%s/<C-R>"//g<LEFT><LEFT>
@@ -563,7 +566,7 @@ function! s:attachJDB(port)
     call vebugger#jdb#start({'con': a:port})
 endfunction
 command! -nargs=1 VBGattachJdb call s:attachJDB(<q-args>)
-autocmd FileType java,groovy nmap ,vs :VBGattachJdb 5005
+autocmd FileType java,groovy,scala nmap ,vs :VBGattachJdb 5005
 nmap ,vk :VBGkill<CR>
 
 "-----------------------------------------------------------------------------

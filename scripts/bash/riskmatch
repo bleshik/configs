@@ -1,7 +1,6 @@
 #!/bin/bash - 
 cd ~/K/risk
 TMUX_SESSION='dev_riskmatch'
-/usr/local/spark/sbin/start-master.sh
 tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-site' -c "$PWD/master-site" \;\
      new-window -n 'master-worker' -c "$PWD/master-worker" \;\
      new-window -n 'broker-site' -c "$PWD/broker-site" \;\
@@ -11,12 +10,6 @@ tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-
      new-window -n 'carriercalc-worker' -c "$PWD/carriercalc-worker" \;\
      new-window -n 'mysql' \;\
      new-window -n 'elasticsearch' -c "$PWD/carriercalc-worker" \;\
-     new-window -n 'spark' -c "$PWD/carriercalc-worker" \;\
-     send-keys -t $TMUX_SESSION:2 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker1"' C-m \;\
-     send-keys -t $TMUX_SESSION:3 'export GRAILS_OPTS="$GRAILS_OPTS -Dbrokerid=broker-worker-1"' C-m \;\
-     send-keys -t $TMUX_SESSION:4 'export GRAILS_OPTS="$GRAILS_OPTS -Dcarrierid=carrier1"' C-m \;\
-     send-keys -t $TMUX_SESSION:5 'export GRAILS_OPTS="$GRAILS_OPTS -Dcarrierid=carrier1"' C-m \;\
      send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\
-     send-keys -t $TMUX_SESSION:8 'ES_MAX_MEM=256m elasticsearch' C-m \;\
-     send-keys -t $TMUX_SESSION:9 'tail -f /usr/local/spark/logs/spark-bleshik-org.apache.spark.deploy.master.Master-1-Alexey-Balchunas-MacBook-Pro.local.out' C-m \;\
+     send-keys -t $TMUX_SESSION:8 'ES_MAX_MEM=512m elasticsearch' C-m \;\
      attach

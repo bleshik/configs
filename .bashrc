@@ -131,19 +131,19 @@ PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 
 function grails {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`"
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`"
 }
 
 function groovy {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/groovy/current/bin/groovy "$@"
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovy "$@"
 }
 
 function groovysh {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/groovy/current/bin/groovysh "$@"
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovysh "$@"
 }
 
-GVM_INIT=false
-[[ -s "$HOME/.gvm/bin/gvm-init.sh" ]] && source "$HOME/.gvm/bin/gvm-init.sh" #&& source ~/.grails-completion.sh
+SDKMAN_INIT=false
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh" #&& source ~/.grails-completion.sh
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
 function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifconfig vboxnet0; ifconfig vboxnet1; ifconfig vboxnet2) | grep "inet " | cut -d ' ' -f2 | grep "$(boot2docker ip | sed -e 's/.[0-9]*$//g')"`" -v ~/multi-tool:/root/multi-tool riskmatch/multitool; }
 

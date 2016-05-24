@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$1" ] ; then
+    MESSAGE="Done, my Lord!"
+else
+    MESSAGE="$1"
+fi
+
+if [ -z "$2" ] ; then
+    TITLE="Done"
+else
+    TITLE="$2"
+fi
+
+reattach-to-user-namespace osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""

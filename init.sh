@@ -20,4 +20,5 @@ ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
 brew install tmux
+brew install reattach-to-user-namespace
 brew install bash
