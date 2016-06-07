@@ -130,22 +130,52 @@ PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 
+function notifyLastCommand {
+    CODE=$?
+    if [ "$CODE" = "0" ] ; then
+        TITLE="Success"
+    else
+        TITLE="Failure ($CODE)"
+    fi
+    notify "`fc -ln -1 | xargs` is done
+at $PWD" "$TITLE"
+    return $CODE
+}
+
 function grails {
-    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`"
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`" | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
+    notifyLastCommand
 }
 
 function groovy {
     JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovy "$@"
+    notifyLastCommand
 }
 
 function groovysh {
     JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovysh "$@"
 }
 
+function java {
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "$JAVA_HOME/bin/java" "$@"
+    notifyLastCommand
+}
+
+function javac {
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "$JAVA_HOME/bin/javac" "$@"
+    notifyLastCommand
+}
+
 SDKMAN_INIT=false
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh" #&& source ~/.grails-completion.sh
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
 function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifconfig vboxnet0; ifconfig vboxnet1; ifconfig vboxnet2) | grep "inet " | cut -d ' ' -f2 | grep "$(boot2docker ip | sed -e 's/.[0-9]*$//g')"`" -v ~/multi-tool:/root/multi-tool riskmatch/multitool; }
+
+# Create tags for the JDK
+function ctagsJava {
+    [ ! -f "$JAVA_HOME/.tags" ] && [ -f "$JAVA_HOME/src.zip" ] && unzip -f "$JAVA_HOME/src.zip" >&/dev/null && echo "Tagging JDK..." && ctags -a -f "$JAVA_HOME/.tags" -R "$JAVA_HOME/src"
+}
+ctagsJava &
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/bleshik/.sdkman"

@@ -67,10 +67,9 @@ set hidden
 set nofoldenable
 
 " Chooses colorscheme and changes some colors
-let g:solarized_contrast="high"
-let g:solarized_termcolors=256
-colorscheme solarized
 set background=light
+let g:solarized_contrast='normal'
+colorscheme solarized
 
 " Highlights when searches
 set hlsearch
@@ -113,7 +112,7 @@ autocmd FileType java,groovy,scala inoremap <buffer> ,l private final Log log = 
 autocmd FileType java,groovy,scala nmap <buffer> ,l o,l<C-C>
 
 " Jump to the base class
-autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /extends\\|implements<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
+autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s\w\+[<\s{$]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
 
 " JSON format shortcut
 autocmd FileType json nmap =j :%!python -m json.tool<CR>
@@ -168,7 +167,8 @@ set noerrorbells
 
 " Font
 if has("gui_running")
-    set guifont=Menlo:h10:cDEFAULT
+    set guifont=Monaco:h12
+    set t_Co=8 t_md=
 endif
 
 " buffers
@@ -247,18 +247,18 @@ nmap ,bd :BD<cr>
 set nocursorline
 set nocursorcolumn
 
-" use number by default and toogle if needed
+" use nonumber by default and toogle if needed
 set norelativenumber
-set number
+set nonumber
 function! NumberToggle()
-  if(&relativenumber == 1)
-    set norelativenumber
-    set number
-    highlight LineNr ctermfg=yellow
-  else
-    set relativenumber
-    highlight LineNr ctermfg=green
-  endif
+    if(&relativenumber == 1)
+        set norelativenumber
+        set number
+        highlight LineNr ctermfg=yellow
+    else
+        set relativenumber
+        highlight LineNr ctermfg=green
+    endif
 endfunc
 nnoremap ,t :call NumberToggle()<cr>
 
@@ -279,9 +279,9 @@ nmap ,i :execute ":call ImportClass('" . expand("<cword>") . "')" <CR>
 "-----------------------------------------------------------------------------
 " Thanks to Drew Neil
 autocmd User fugitive
-  \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-  \  noremap <buffer> .. :edit %:h<cr> |
-  \ endif
+            \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+            \  noremap <buffer> .. :edit %:h<cr> |
+            \ endif
 autocmd BufReadPost fugitive://* set bufhidden=delete
 
 "nmap ,gs :Gstatus<cr>
@@ -293,13 +293,13 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " AG (SilverSearcher) Settings
 "-----------------------------------------------------------------------------
 function! AgProjectRoot(pattern)
-  let l:dir = FindGitDirOrCurrent()
-  echom a:pattern . " in " . l:dir
-  execute ':Ag ' . a:pattern . ' "' . dir . '"'
+    let l:dir = FindGitDirOrCurrent()
+    echom a:pattern . " in " . l:dir
+    execute ':Ag ' . a:pattern . ' "' . dir . '"'
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let g:ag_prg = '/usr/local/bin/ag --ignore-dir=target --ignore=.vimtags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
+let g:ag_prg = '/usr/local/bin/ag --ignore-dir=target --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -325,20 +325,20 @@ nmap <c-F5> :GundoToggle<cr>
 "-----------------------------------------------------------------------------
 " EasyTags
 "-----------------------------------------------------------------------------
-nmap <C-]> :execute ":tag /" . expand("<cword>")<cr>
+nmap <C-]> :call GoToJvmType(expand("<cword>"))<cr>
 " Do not update tags automatically
 let g:easytags_events = []
-let g:easytags_file = '~/.vimtags'
-set tags=~/.vimtags,./.vimtags;~/.vimtags,.vimtags;
+let g:easytags_file = '~/.tags'
+set tags=~/.tags,./.tags;,.tags;,$JAVA_HOME/.tags
 set cpoptions+=d
 let g:easytags_dynamic_files = 2
 let g:home_code_dir = '/Users/bleshik/K'
 let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_languages = {
-\   'groovy': {
-\   }
-\}
+            \   'groovy': {
+            \   }
+            \}
 
 "-----------------------------------------------------------------------------
 " Functions
@@ -349,25 +349,25 @@ function! s:copyCurrentFileTo(name)
 endfunction
 
 function! BWipeoutAll()
-  let lastbuf = bufnr('$')
-  let ids = sort(filter(range(1, bufnr('$')), 'bufexists(v:val)'))
-  execute ":" . ids[0] . "," . lastbuf . "bwipeout!"
-  unlet lastbuf
+    let lastbuf = bufnr('$')
+    let ids = sort(filter(range(1, bufnr('$')), 'bufexists(v:val)'))
+    execute ":" . ids[0] . "," . lastbuf . "bwipeout!"
+    unlet lastbuf
 endfunction
 
 function! FindGitDirOrCurrent()
-  let filedir = expand('%:p:h')
-  if isdirectory(filedir)
-    let cmd = 'bash -c "(cd ' . filedir . '; git rev-parse --show-toplevel 2>/dev/null)"'
-    let gitdir = system(cmd)
-    if strlen(gitdir) == 0
-      return getcwd()
+    let filedir = expand('%:p:h')
+    if isdirectory(filedir)
+        let cmd = 'bash -c "(cd ' . filedir . '; git rev-parse --show-toplevel 2>/dev/null)"'
+        let gitdir = system(cmd)
+        if strlen(gitdir) == 0
+            return getcwd()
+        else
+            return gitdir[:-2] " chomp
+        endif
     else
-      return gitdir[:-2] " chomp
+        return getcwd() 
     endif
-  else
-    return getcwd() 
-  endif
 endfunction
 
 function! StripTrailingWhitespaces()
@@ -378,14 +378,14 @@ function! StripTrailingWhitespaces()
 endfunction
 
 function! GetPackage(filename)
-	for l:line in readfile(a:filename)
-    " trailing ; is optional to make it work for groovy as well
-		let l:matches=matchlist(l:line,'\vpackage\s+(%(\w|\.)+)\s*;?')
-		if 1<len(l:matches)
-			return l:matches[1]
-		endif
-	endfor
-	return l:className
+    for l:line in readfile(a:filename)
+        " trailing ; is optional to make it work for groovy as well
+        let l:matches=matchlist(l:line,'\vpackage\s+(%(\w|\.)+)\s*;?')
+        if 1<len(l:matches)
+            return l:matches[1]
+        endif
+    endfor
+    return ''
 endfunction
 
 function! GuessPackage(filename)
@@ -415,35 +415,90 @@ endfunction
 
 " imports java/groovy class under cursor using tags
 function! ImportClass(identifier)
-  for l:keyword in [ "class", "interface", "trait", "enum"]
-      let l:tag = s:getTagContainingString(a:identifier, "", l:keyword."\\s\\+".a:identifier."\\W", 1)
-      if (len(l:tag) > 0)
+    let l:tag = s:getJvmTypeTag(a:identifier)
+    if (len(l:tag) > 0)
         echom l:tag.filename
         let l:package = GetPackage(l:tag.filename)
         let l:suffix = ""
         if (&filetype == "java")
-          let l:suffix = ";"
+            let l:suffix = ";"
         endif
         call append(2, "import " . l:package . "." . l:tag.name . l:suffix)
         return
-      endif
-  endfor
-  echom a:identifier." was not found"
+    endif
+    echom a:identifier." was not found"
 endfunction
 
-function! s:getTagContainingString(id, language, str, include)
-  let l:tags = taglist(a:id)
-  if (len(l:tags) > 0)
+function! GoToJvmType(typeName)
+    let l:tag = s:getJvmTypeTag(a:typeName)
+    if (len(l:tag) > 0)
+        execute ":e ".l:tag.filename
+    else
+        execute ":tag /".a:typeName
+    endif
+endfunction
+
+function! s:getJvmTypeTag(typeName)
+    "let l:tags = s:getTagsContainingString(a:typeName, "", "\\(object\\|class\\|interface\\|trait\\|enum\\)\\s\\+".a:typeName."\\W", 1)
+    let l:tags = filter(
+                \s:getTagsContainingString(a:typeName, "", "", 1),
+                \"(v:val.kind ==# 'c' || v:val.kind ==# 'o' || v:val.kind ==# 'i' || v:val.kind ==# 'e') && !has_key(v:val, 'class') && v:val.name ==# a:typeName")
+    if (len(l:tags) == 1)
+        return l:tags[0]
+    endif
+    if (len(l:tags) <= 0)
+        return {}
+    endif
+
+    let l:c = 0
+    let l:tagsNames = []
     for l:tag in l:tags
-        if ((len(a:language) <= 0 || tolower(a:language) == tolower(l:tag.language)) &&
-            \filereadable(l:tag.filename) &&
-            \(a:include && match(readfile(l:tag.filename), a:str) >= 0 ||
-            \!a:include && match(readfile(l:tag.filename), a:str) < 0))
-        return l:tag
-      endif
+        let l:c += 1
+        let l:package = GetPackage(l:tag.filename)
+        call add(l:tagsNames, l:c.". ".string(l:package.".".l:tag.name))
     endfor
-  endif
-  return {}
+
+    if (len(l:tagsNames) == 1)
+        return l:tags[0]
+    endif
+
+    return l:tags[inputlist(l:tagsNames) - 1]
+endfunction
+
+function! s:getTagsContainingString(id, language, str, include)
+    let l:tags = taglist(a:id)
+    let l:result = []
+    if (len(l:tags) > 0)
+        for l:tag in l:tags
+            if ((len(a:language) <= 0 || tolower(a:language) == tolower(l:tag.language)) &&
+                        \filereadable(l:tag.filename) &&
+                        \(a:include && match(readfile(l:tag.filename), a:str) >= 0 ||
+                        \!a:include && match(readfile(l:tag.filename), a:str) < 0))
+                call add(l:result, l:tag)
+            endif
+        endfor
+    endif
+    let l:result = Unique(l:result, '(v:val["kind"]).(v:val["name"]).(fnamemodify(v:val["filename"], ":p"))')
+    if (len(l:tags) > 1)
+        let l:head = [] 
+        let l:tail = [] 
+        for l:tag in l:result
+            " system classes should be at the end ot the list
+            if match(GetPackage(l:tag.filename), "^\\(java\\|scala\\|com.sun\\)") == -1
+                call add(l:head, l:tag)
+            else
+                call add(l:tail, l:tag)
+            endif
+        endfor
+        return l:head + l:tail
+    else
+        return l:result
+    endif
+endfunction
+
+function! Unique(list, value)
+    let l:mappedValues = map(copy(a:list), a:value)
+    return filter(copy(a:list), 'index(l:mappedValues, '.a:value.', v:key+1) == -1')
 endfunction
 
 "-----------------------------------------------------------------------------
@@ -497,9 +552,15 @@ let g:grails_tests_suffix = "Spec"
 nnoremap ,gt :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'unit')<CR>:e <C-R>"<CR>
 nnoremap ,gti :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'integration')<CR>:e <C-R>"<CR>
 
-function! UpdateGrailsTags()
-    system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i/../; grails refresh-dependencies --include-source 2>&1 >> /tmp/vim-grails-refresh.log) ; done && for i in `find ~/.gvm/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 >> /tmp/vim-grails-refresh.log ; done) &')
+function! s:updateGrailsTags()
+    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i; cd $i/../; grails refresh-dependencies --include-source 2>&1) ; done ; for i in `find ~/.sdkman/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && echo "Done") >> /tmp/vim-grails-refresh.log &')
 endfunction
+command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
+
+function! s:updateSbtTags()
+    call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; sbt gen-ctags 2>&1) ; done && echo "Done") >> /tmp/vim-sbt-refresh.log &')
+endfunction
+command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
 
 "-----------------------------------------------------------------------------
 " UtilSnips
@@ -581,11 +642,11 @@ let g:ctrlp_open_new_file       = 'r'
 let g:ctrlp_open_multiple_files = '1ri'
 let g:ctrlp_match_window        = 'max:40'
 let g:ctrlp_prompt_mappings     = {
-  \ 'PrtSelectMove("j")':   ['<c-n>'],
-  \ 'PrtSelectMove("k")':   ['<c-p>'],
-  \ 'PrtHistory(-1)':       ['<c-j>', '<down>'],
-  \ 'PrtHistory(1)':        ['<c-i>', '<up>']
-\ }
+            \ 'PrtSelectMove("j")':   ['<c-n>'],
+            \ 'PrtSelectMove("k")':   ['<c-p>'],
+            \ 'PrtHistory(-1)':       ['<c-j>', '<down>'],
+            \ 'PrtHistory(1)':        ['<c-i>', '<up>']
+            \ }
 nmap ,fb :CtrlPBuffer<cr>
 nmap ,ff :CtrlP .<cr>
 nmap ,fF :execute ':CtrlP ' . expand('%:p:h')<cr>
@@ -595,10 +656,10 @@ nmap ,fl :CtrlPLine<cr>
 nmap ,fe :CtrlP 
 let g:ctrlp_map = ',ff'
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|third-party)$',
-  \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
-  \ 'link': 'some_bad_symbolic_links'
-  \ }
+            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|third-party)$',
+            \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
+            \ 'link': 'some_bad_symbolic_links'
+            \ }
 
 "-----------------------------------------------------------------------------
 " EasyAlign
