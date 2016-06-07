@@ -12,4 +12,4 @@ else
     TITLE="$2"
 fi
 
-reattach-to-user-namespace osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\""
+reattach-to-user-namespace osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\"" ; say $TITLE
