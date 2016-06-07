@@ -1,6 +1,7 @@
 #!/bin/sh
 
 cd `dirname $0`
+mkdir -p ~/.sbt/0.13/plugins
 ln -sFf $PWD/.inputrc ~/.inputrc
 ln -sFf $PWD/.ctags ~/.ctags
 ln -sFf $PWD/.vim ~/.vim
@@ -17,6 +18,7 @@ ln -sFf $PWD/.gradle-tab-completion.bash ~/.gradle-tab-completion.bash
 ln -sFf $PWD/grails/.grails-completion.sh ~/.grails-completion.sh
 ln -sFf $PWD/scripts ~/.scripts
 ln -sFf $PWD/.bash_plugins ~/.bash_plugins
+ln -sFf $PWD/sbt/plugins/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
 ln -sFf /dev/null ~/.bash_history
 git submodule update --init --recursive
 brew install tmux
