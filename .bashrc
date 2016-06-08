@@ -142,9 +142,16 @@ at $PWD" "$TITLE"
     return $CODE
 }
 
+function currentGitBranch {
+    git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
 function grails {
-    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`git rev-parse --abbrev-ref HEAD 2>/dev/null`" | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
+    CODE=$?
+    ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
+    return $CODE
 }
 
 function groovy {

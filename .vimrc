@@ -323,24 +323,6 @@ nmap <silent> ,oJ :FSSplitBelow<CR>
 nmap <c-F5> :GundoToggle<cr>
 
 "-----------------------------------------------------------------------------
-" EasyTags
-"-----------------------------------------------------------------------------
-nmap <C-]> :call GoToJvmType(expand("<cword>"))<cr>
-" Do not update tags automatically
-let g:easytags_events = []
-let g:easytags_file = '~/.tags'
-set tags=~/.tags,./.tags;,.tags;,$JAVA_HOME/.tags
-set cpoptions+=d
-let g:easytags_dynamic_files = 2
-let g:home_code_dir = '/Users/bleshik/K'
-let g:easytags_async = 1
-let g:easytags_auto_highlight = 0
-let g:easytags_languages = {
-            \   'groovy': {
-            \   }
-            \}
-
-"-----------------------------------------------------------------------------
 " Functions
 "-----------------------------------------------------------------------------
 function! s:copyCurrentFileTo(name)
@@ -368,6 +350,10 @@ function! FindGitDirOrCurrent()
     else
         return getcwd() 
     endif
+endfunction
+
+function! GetCurrentGitBranch()
+    return system('git rev-parse --abbrev-ref HEAD 2>/dev/null | xargs echo -n')
 endfunction
 
 function! StripTrailingWhitespaces()
@@ -430,6 +416,7 @@ function! ImportClass(identifier)
 endfunction
 
 function! GoToJvmType(typeName)
+    echo a:typeName
     let l:tag = s:getJvmTypeTag(a:typeName)
     if (len(l:tag) > 0)
         execute ":e ".l:tag.filename
@@ -440,9 +427,11 @@ endfunction
 
 function! s:getJvmTypeTag(typeName)
     "let l:tags = s:getTagsContainingString(a:typeName, "", "\\(object\\|class\\|interface\\|trait\\|enum\\)\\s\\+".a:typeName."\\W", 1)
-    let l:tags = filter(
-                \s:getTagsContainingString(a:typeName, "", "", 1),
-                \"(v:val.kind ==# 'c' || v:val.kind ==# 'o' || v:val.kind ==# 'i' || v:val.kind ==# 'e') && !has_key(v:val, 'class') && v:val.name ==# a:typeName")
+    let l:tags = Unique(
+                    \filter(
+                    \s:getTagsContainingString(a:typeName, "", "", 1),
+                    \"(v:val.kind ==# 'c' || v:val.kind ==# 'o' || v:val.kind ==# 'i' || v:val.kind ==# 'e') && !has_key(v:val, 'class') && v:val.name ==# a:typeName"),
+                \"v:val.package")
     if (len(l:tags) == 1)
         return l:tags[0]
     endif
@@ -454,8 +443,7 @@ function! s:getJvmTypeTag(typeName)
     let l:tagsNames = []
     for l:tag in l:tags
         let l:c += 1
-        let l:package = GetPackage(l:tag.filename)
-        call add(l:tagsNames, l:c.". ".string(l:package.".".l:tag.name))
+        call add(l:tagsNames, l:c.". ".string(l:tag.package.".".l:tag.name))
     endfor
 
     if (len(l:tagsNames) == 1)
@@ -474,6 +462,7 @@ function! s:getTagsContainingString(id, language, str, include)
                         \filereadable(l:tag.filename) &&
                         \(a:include && match(readfile(l:tag.filename), a:str) >= 0 ||
                         \!a:include && match(readfile(l:tag.filename), a:str) < 0))
+                let l:tag.package = GetPackage(l:tag.filename)
                 call add(l:result, l:tag)
             endif
         endfor
@@ -484,7 +473,7 @@ function! s:getTagsContainingString(id, language, str, include)
         let l:tail = [] 
         for l:tag in l:result
             " system classes should be at the end ot the list
-            if match(GetPackage(l:tag.filename), "^\\(java\\|scala\\|com.sun\\)") == -1
+            if match(l:tag.package, "^\\(java\\|scala\\|com.sun\\)") == -1
                 call add(l:head, l:tag)
             else
                 call add(l:tail, l:tag)
@@ -500,6 +489,42 @@ function! Unique(list, value)
     let l:mappedValues = map(copy(a:list), a:value)
     return filter(copy(a:list), 'index(l:mappedValues, '.a:value.', v:key+1) == -1')
 endfunction
+
+"-----------------------------------------------------------------------------
+" EasyTags
+"-----------------------------------------------------------------------------
+command! -nargs=1 GoToJvmType call GoToJvmType(<q-args>)
+nmap <C-]> :execute ":call GoToJvmType('" . expand("<cword>") . "')"<cr>
+nmap ,tt :GoToJvmType 
+" Do not update tags automatically
+let g:easytags_events = []
+let g:easytags_file = '~/.tags'
+set cpoptions+=d
+let g:easytags_dynamic_files = 2
+let g:home_code_dir = '/Users/bleshik/K'
+let g:easytags_async = 1
+let g:easytags_auto_highlight = 0
+let g:easytags_languages = {
+            \   'groovy': {
+            \   }
+            \}
+
+function! s:updateTagsValue()
+    exe ":set tags=~/.tags,./.tags;,.tags;,$JAVA_HOME/.tags,*/target/.tags,target/.tags,*/.tags,*/target/".GetCurrentGitBranch()."/.tags,target/".GetCurrentGitBranch()."/.tags"
+endfunction
+command! -nargs=0 UpdateTagsValue call s:updateTagsValue()
+UpdateTagsValue
+
+function! s:updateGrailsTags()
+    call s:updateTagsValue()
+    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i; cd $i/../; grails refresh-dependencies --include-source 2>&1) ; done ; for i in `find ~/.sdkman/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && echo "Done") >> /tmp/vim-grails-refresh.log &')
+endfunction
+command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
+
+function! s:updateSbtTags()
+    call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; sbt gen-ctags 2>&1) ; done && echo "Done") >> /tmp/vim-sbt-refresh.log &')
+endfunction
+command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
 
 "-----------------------------------------------------------------------------
 " Fix constant spelling mistakes
@@ -551,16 +576,6 @@ let g:grails_tests_suffix = "Spec"
 
 nnoremap ,gt :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'unit')<CR>:e <C-R>"<CR>
 nnoremap ,gti :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'integration')<CR>:e <C-R>"<CR>
-
-function! s:updateGrailsTags()
-    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i; cd $i/../; grails refresh-dependencies --include-source 2>&1) ; done ; for i in `find ~/.sdkman/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && echo "Done") >> /tmp/vim-grails-refresh.log &')
-endfunction
-command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
-
-function! s:updateSbtTags()
-    call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; sbt gen-ctags 2>&1) ; done && echo "Done") >> /tmp/vim-sbt-refresh.log &')
-endfunction
-command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
 
 "-----------------------------------------------------------------------------
 " UtilSnips
@@ -654,6 +669,7 @@ nmap ,fr :CtrlP<cr>
 nmap ,fm :CtrlPMixed<cr>
 nmap ,fl :CtrlPLine<cr>
 nmap ,fe :CtrlP 
+nmap ,ft :CtrlPTag<cr>
 let g:ctrlp_map = ',ff'
 let g:ctrlp_custom_ignore = {
             \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|third-party)$',
