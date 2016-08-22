@@ -122,7 +122,7 @@ source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
 [[ -d "~/.bash_plugin" ]] && source ~/.bash_plugins/*
 
-PATH=/Applications/MacVim.app/Contents/MacOS/:$PATH
+PATH=/Applications/MacVim.app/Contents/MacOS:$PATH
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/.scripts_additional/bash
 PATH=$PATH:$HOME/.scripts/bash
@@ -147,7 +147,7 @@ function currentGitBranch {
 }
 
 function grails {
-    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
     CODE=$?
     ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
@@ -187,3 +187,5 @@ ctagsJava &
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/bleshik/.sdkman"
 [[ -s "/Users/bleshik/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/bleshik/.sdkman/bin/sdkman-init.sh"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

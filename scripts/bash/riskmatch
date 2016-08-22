@@ -10,6 +10,10 @@ tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-
      new-window -n 'carriercalc-worker' -c "$PWD/carriercalc-worker" \;\
      new-window -n 'mysql' \;\
      new-window -n 'elasticsearch' -c "$PWD/carriercalc-worker" \;\
+     new-window -n 'logs' -c "$PWD/carriercalc-worker" \;\
      send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\
      send-keys -t $TMUX_SESSION:8 'ES_MAX_MEM=512m elasticsearch' C-m \;\
+     send-keys -t $TMUX_SESSION:9 'touch /tmp/vim-grails-refresh.log && tail -f /tmp/vim-grails-refresh.log' C-m \;\
+     split-window -v -t $TMUX_SESSION:9 \;\
+     send-keys -t $TMUX_SESSION:9 'touch /tmp/vim-sbt-refresh.log && tail -f /tmp/vim-sbt-refresh.log' C-m \;\
      attach

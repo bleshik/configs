@@ -9,7 +9,7 @@
     df = diff
     lg = log -p
     d = difftool
-    gb = !git --no-pager log --format=\"%H\" --decorate --all --grep=$1 | xargs -I {} sh -c \"git branch --contains {}| paste -sd ',' - && git --no-pager log --oneline --decorate {}^..{}\"
+    gb = !git --no-pager log --format=\"%H\" --decorate --all --grep="$1" | xargs -I {} sh -c \"git branch --contains {}| paste -sd ',' - && git --no-pager log --oneline --decorate {}^..{}\"
     ro = !git clean -f */*.orig
     my = log -n 20 --all --author=Alexey
 [difftool "Kaleidoscope"]                                                       

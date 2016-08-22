@@ -27,7 +27,7 @@ Plugin 'xolox/vim-easytags'
 Plugin 'rking/ag.vim'
 Plugin 'bufkill.vim'
 Plugin 'MarcWeber/vim-addon-completion'
-Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'bleshik/ctrlp.vim'
 Plugin 'EasyMotion'
 Plugin 'derekwyatt/vim-fswitch'
 Plugin 'tpope/vim-fugitive'
@@ -35,7 +35,6 @@ Plugin 'vim-scripts/gnupg.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'laurentgoudet/vim-howdoi'
 Plugin 'elzr/vim-json'
-Plugin 'scrooloose/nerdtree'
 Plugin 'derekwyatt/vim-sbt'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'altercation/vim-colors-solarized'
@@ -80,9 +79,6 @@ set incsearch
 " Register doesn't matter
 set ic
 
-" Enables lines numbers
-set nu
-
 " Ruler on
 set ruler
 
@@ -102,17 +98,21 @@ nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
 command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
 nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
-autocmd FileType java,groovy,scala nmap <buffer> cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
 " IDEA-like formatting after inserting } character
 autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
 
 " Couldn't make such a snippet
-autocmd FileType java,groovy,scala inoremap <buffer> ,l private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
-autocmd FileType java,groovy,scala nmap <buffer> ,l o,l<C-C>
+autocmd FileType groovy,scala inoremap <buffer> ,cl private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
+autocmd FileType groovy,scala nmap <buffer> ,cl o,cl<C-C>
+autocmd FileType groovy,scala inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.slf4j.Logger")<CR>:call append(2, "import org.slf4j.LoggerFactory")<CR>`'a
+autocmd FileType groovy,scala nmap <buffer> ,sl o,sl<C-C>
+autocmd FileType java inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLog(this.getClass());<C-C>m'<CR>:call append(2, "import org.slf4j.Logger;")<CR>:call append(2, "import org.slf4j.LoggerFactory;")<CR>`'a
+autocmd FileType java nmap <buffer> ,sl o,sl<C-C>
 
 " Jump to the base class
-autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s\w\+[<\s{$]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
+autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s*\w\+\s*[<\s{$\[]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
 
 " JSON format shortcut
 autocmd FileType json nmap =j :%!python -m json.tool<CR>
@@ -128,15 +128,12 @@ nmap <C-B> :call setreg("\"",system("pbpaste"))<CR>p
 " groovyness in Insert mode (lets you paste and keep on typing)
 imap <C-B> <c-c><C-B>a
 
-" NERD
-"  NERDTree maps
-nmap ,v :NERDTree<cr>
-vmap ,v <c-c>:NERDTree<cr>i
-imap ,v <c-c>:NERDTree<cr>i
-
-nmap ,x :NERDTreeClose<cr>
-vmap ,x <c-c>:NERDTreeClose<cr>i
-imap ,x <c-c>:NERDTreeClose<cr>i
+nnoremap <C-J> :m .+1<CR>==
+nnoremap <C-K> :m .-2<CR>==
+inoremap <C-J> <Esc>:m .+1<CR>==gi
+inoremap <C-K> <Esc>:m .-2<CR>==gi
+vnoremap <C-J> :m '>+1<CR>gv=gv
+vnoremap <C-K> :m '<-2<CR>gv=gv
 
 " toolbars suck!
 if has('gui_running')
@@ -201,8 +198,8 @@ set showmode
 
 " Disable it... every time I hit the limit I unset this anyway. It's annoying
 set textwidth=0
-" Highlight the 121th column as a recommendation for maximum amount of characters in single line for code
-autocmd FileType java,groovy,javascript,coffeescript,scala setlocal colorcolumn=121
+" Highlight the 120th column as a recommendation for maximum amount of characters in single line for code
+autocmd FileType java,groovy,javascript,coffeescript,scala setlocal colorcolumn=120 tw=120
 
 " When completing by tag, show the whole tag, not just the function name
 set showfulltag
@@ -248,15 +245,13 @@ set nocursorline
 set nocursorcolumn
 
 " use nonumber by default and toogle if needed
-set norelativenumber
 set nonumber
 function! NumberToggle()
-    if(&relativenumber == 1)
-        set norelativenumber
-        set number
+    if(&number == 1)
+        set nonumber
         highlight LineNr ctermfg=yellow
     else
-        set relativenumber
+        set number 
         highlight LineNr ctermfg=green
     endif
 endfunc
@@ -272,7 +267,9 @@ nnoremap <F1> @<Esc>kyWjPA<BS>
 inoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 
-nmap ,i :execute ":call ImportClass('" . expand("<cword>") . "')" <CR>
+command! -nargs=1 ImportClass call ImportClass(<q-args>)
+nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
+nmap ,ii :ImportClass 
 
 "-----------------------------------------------------------------------------
 " Fugitive
@@ -375,14 +372,37 @@ function! GetPackage(filename)
 endfunction
 
 function! GuessPackage(filename)
-    let l:stopWords = [ "domain", "taglib", "integration", "unit", "services", "controllers", "jobs", "groovy", "java", fnamemodify(a:filename, ":e") ]
+    let l:stopWords = [ "sbt-ctags-dep-srcs", "domain", "taglib", "integration", "unit", "services", "controllers", "jobs", "groovy", "java", fnamemodify(a:filename, ":e") ]
+    let l:skipWords = [ ]
+    if match(fnamemodify(a:filename, ":p"), $JAVA_HOME) >= 0
+        call add(l:stopWords, "src")
+    endif
+    if match(fnamemodify(a:filename, ":p"), ".m2") >= 0
+        call add(l:skipWords, ".m2")
+        call add(l:stopWords, ".*\\d\\..*")
+    endif
     let l:packageStarted = 0
     let l:package = ""
+    let l:packageStarted = 0
     for l:dirname in split(fnamemodify(a:filename, ":p:h"), "/")
-        if l:packageStarted
-            let l:package = len(l:package) > 0 ? l:package.".".l:dirname : l:dirname
+        let l:skip = 0
+        for l:skipWord in l:skipWords
+            if match(l:dirname, l:skipWord) >= 0
+                let l:skip = 1
+            endif
+        endfor
+        if l:skip == 0
+            if l:packageStarted == 1
+                let l:package = len(l:package) > 0 ? l:package.".".l:dirname : l:dirname
+            endif
+            if l:packageStarted == 0
+                for l:stopWord in l:stopWords
+                    if match(l:dirname, '^'.l:stopWord.'$\C') >= 0
+                        let l:packageStarted = 1
+                    endif
+                endfor
+            endif
         endif
-        let l:packageStarted = l:packageStarted || index(l:stopWords, l:dirname) >= 0
     endfor
     return l:package
 endfunction
@@ -403,23 +423,26 @@ endfunction
 function! ImportClass(identifier)
     let l:tag = s:getJvmTypeTag(a:identifier)
     if (len(l:tag) > 0)
-        echom l:tag.filename
         let l:package = GetPackage(l:tag.filename)
         let l:suffix = ""
         if (&filetype == "java")
             let l:suffix = ";"
         endif
         call append(2, "import " . l:package . "." . l:tag.name . l:suffix)
+        execute ":normal mpgg"
+        silent! execute '/^import \(static\)\@\!/,?^import \(static\)\@\!?g/^\s*$/normal dd'
+        execute ":normal gg"
+        silent! execute ':/^import \(static\)\@\!/,?^import \(static\)\@\!?sort u'
+        execute ":normal 'pzz"
         return
     endif
     echom a:identifier." was not found"
 endfunction
 
 function! GoToJvmType(typeName)
-    echo a:typeName
     let l:tag = s:getJvmTypeTag(a:typeName)
     if (len(l:tag) > 0)
-        execute ":e ".l:tag.filename
+        execute ":e ".l:tag["filename"]
     else
         execute ":tag /".a:typeName
     endif
@@ -459,30 +482,15 @@ function! s:getTagsContainingString(id, language, str, include)
     if (len(l:tags) > 0)
         for l:tag in l:tags
             if ((len(a:language) <= 0 || tolower(a:language) == tolower(l:tag.language)) &&
-                        \filereadable(l:tag.filename) &&
+                        \filereadable(l:tag.filename) && (len(a:str) <= 0 ||
                         \(a:include && match(readfile(l:tag.filename), a:str) >= 0 ||
-                        \!a:include && match(readfile(l:tag.filename), a:str) < 0))
-                let l:tag.package = GetPackage(l:tag.filename)
+                        \!a:include && match(readfile(l:tag.filename), a:str) < 0)))
+                let l:tag.package = GuessPackage(l:tag.filename)
                 call add(l:result, l:tag)
             endif
         endfor
     endif
-    let l:result = Unique(l:result, '(v:val["kind"]).(v:val["name"]).(fnamemodify(v:val["filename"], ":p"))')
-    if (len(l:tags) > 1)
-        let l:head = [] 
-        let l:tail = [] 
-        for l:tag in l:result
-            " system classes should be at the end ot the list
-            if match(l:tag.package, "^\\(java\\|scala\\|com.sun\\)") == -1
-                call add(l:head, l:tag)
-            else
-                call add(l:tail, l:tag)
-            endif
-        endfor
-        return l:head + l:tail
-    else
-        return l:result
-    endif
+    return Unique(l:result, '(v:val["kind"]).(v:val["name"]).(fnamemodify(v:val["filename"], ":p"))')
 endfunction
 
 function! Unique(list, value)
@@ -498,7 +506,7 @@ nmap <C-]> :execute ":call GoToJvmType('" . expand("<cword>") . "')"<cr>
 nmap ,tt :GoToJvmType 
 " Do not update tags automatically
 let g:easytags_events = []
-let g:easytags_file = '~/.tags'
+let g:easytags_file = '.tags'
 set cpoptions+=d
 let g:easytags_dynamic_files = 2
 let g:home_code_dir = '/Users/bleshik/K'
@@ -516,13 +524,13 @@ command! -nargs=0 UpdateTagsValue call s:updateTagsValue()
 UpdateTagsValue
 
 function! s:updateGrailsTags()
-    call s:updateTagsValue()
-    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (echo $i; cd $i/../; grails refresh-dependencies --include-source 2>&1) ; done ; for i in `find ~/.sdkman/grails/current/lib -name "*sources*.jar"` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && echo "Done") >> /tmp/vim-grails-refresh.log &')
+    call s:updateTagsValue() 
+    call system('(find ~/.sdkman/grails/current/lib | grep "\.jar" | grep -v sources | grep -v javadoc | sed -e "s/.*\/lib\///g" | while read line ; do echo $line && [ ! -f ~/.sdkman/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\/jars.*//g" | sed -e "s/\./\//g"`/`echo $line | sed -e "s/.*jars\///g" | sed -e "s/\(.*\)-\(.*\)\.jar/\2\/\1-\2-sources.jar/g"` > ~/.sdkman/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done ; for i in `(find ~/.sdkman/grails/current/lib -name "*sources*.jar" ; find ~/.m2/repository/ -name "*sources*.jar")` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && ctags -R -a -f .tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-grails-refresh.log &')
 endfunction
 command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
 
 function! s:updateSbtTags()
-    call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; sbt gen-ctags 2>&1) ; done && echo "Done") >> /tmp/vim-sbt-refresh.log &')
+    call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; rm -f .tags; sbt gen-ctags 2>&1) ; done && echo "Done" && date) >> /tmp/vim-sbt-refresh.log &')
 endfunction
 command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
 
@@ -568,6 +576,8 @@ iab Teh        The
 iab teh        the
 iab recieve    receive
 iab Recieve    Receive
+iab retreive   retrieve
+iab Retreive   Retrieve
 
 "-----------------------------------------------------------------------------
 " Grails
@@ -648,11 +658,14 @@ nmap ,vk :VBGkill<CR>
 "-----------------------------------------------------------------------------
 " CtrlP
 "-----------------------------------------------------------------------------
+let g:ctrlp_extensions = ['tag', 'buffertag', 'dir', 'rtscript', 'line', 'changes', 'mixed']
+let g:ctrlp_mruf_default_order  = 0
+let g:ctrlp_by_filename         = 0
 let g:ctrlp_cache_dir           = $HOME . '/.cache/ctrlp'
 let g:ctrlp_max_files           = 0
 let g:ctrlp_switch_buffer       = 'E'
 let g:ctrlp_tabpage_position    = 'c'
-let g:ctrlp_working_path_mode   = 'rc'
+let g:ctrlp_working_path_mode   = 2
 let g:ctrlp_open_new_file       = 'r'
 let g:ctrlp_open_multiple_files = '1ri'
 let g:ctrlp_match_window        = 'max:40'

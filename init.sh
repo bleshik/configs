@@ -24,3 +24,5 @@ git submodule update --init --recursive
 brew install tmux
 brew install reattach-to-user-namespace
 brew install bash
+brew install fzf && /usr/local/opt/fzf/install
+pip install aq
