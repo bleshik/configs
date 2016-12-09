@@ -1,0 +1,9 @@
+#!/usr/bin/osascript
+
+on run {bud, msg}
+    tell application "Messages"
+        set targetService to 1st service whose service type = iMessage
+        set theBuddy to buddy bud of targetService
+        send msg to theBuddy
+    end tell
+end run

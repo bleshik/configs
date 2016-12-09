@@ -1,2 +1,0 @@
-#!/bin/sh
-vi `which test_passwords | head -n 1`

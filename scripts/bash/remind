@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ -z "$1" ] ; then
+    echo Examples:
+    echo remind mvikule4ka@gmail.com Message 201709281130
+    echo remind mvikule4ka@gmail.com Message 09281130
+    echo remind mvikule4ka@gmail.com Message
+    exit 13
+fi
+
+if [ ! -z "$3" ] ; then
+    echo "sendMessage \"$1\" \"$2\"" | at -t "$3"
+else
+    sendMessage "$1" "$2"
+fi

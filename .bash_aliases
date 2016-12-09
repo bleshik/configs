@@ -1,7 +1,5 @@
 alias f='find . -name '
-alias grailsDebug='grails -reloading -Dcache=false'
 alias grailsWatch='grails test-app unit: ; while true ; do echo "---" && fswatch -i .*.java -i .*.groovy -o -1 -0 . | xargs -0 -n1 -I{} grails test-app -rerun unit: ; done'
-alias gradleDebug='gradle-debug'
 alias sbtDebug='sbt-debug'
 
 alias showDotFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall Finder /System/Library/CoreServices/Finder.app'

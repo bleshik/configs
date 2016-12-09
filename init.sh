@@ -25,4 +25,5 @@ brew install tmux
 brew install reattach-to-user-namespace
 brew install bash
 brew install fzf && /usr/local/opt/fzf/install
-pip install aq
+brew install neovim && mkdir -p ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim && pip install neovim --user
+brew install neovim-dot-app

@@ -7,9 +7,3 @@ if [ ! -z "$SSH_AUTH_SOCK" ] ; then
 else
     ssh-agent bash
 fi
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="/Users/bleshik/.sdkman"
-[[ -s "/Users/bleshik/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/bleshik/.sdkman/bin/sdkman-init.sh"

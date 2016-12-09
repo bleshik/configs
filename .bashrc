@@ -138,7 +138,8 @@ function notifyLastCommand {
         TITLE="Failure ($CODE)"
     fi
     notify "`fc -ln -1 | xargs` is done
-at $PWD" "$TITLE"
+at $PWD" "$TITLE" &
+    disown
     return $CODE
 }
 
@@ -147,7 +148,7 @@ function currentGitBranch {
 }
 
 function grails {
-    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.gvm/grails/current/bin/grails -reloading "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
     CODE=$?
     ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
@@ -173,8 +174,11 @@ function javac {
     notifyLastCommand
 }
 
-SDKMAN_INIT=false
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh" #&& source ~/.grails-completion.sh
+function sbt {
+    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "/usr/local/bin/sbt" "$@"
+    notifyLastCommand
+}
+
 #[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
 function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifconfig vboxnet0; ifconfig vboxnet1; ifconfig vboxnet2) | grep "inet " | cut -d ' ' -f2 | grep "$(boot2docker ip | sed -e 's/.[0-9]*$//g')"`" -v ~/multi-tool:/root/multi-tool riskmatch/multitool; }
 
@@ -184,8 +188,10 @@ function ctagsJava {
 }
 ctagsJava &
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+SDKMAN_INIT=false
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="/Users/bleshik/.sdkman"
 [[ -s "/Users/bleshik/.sdkman/bin/sdkman-init.sh" ]] && source "/Users/bleshik/.sdkman/bin/sdkman-init.sh"
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*

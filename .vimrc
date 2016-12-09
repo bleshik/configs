@@ -5,7 +5,7 @@ filetype off
 set runtimepath+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'tpope/vim-commentary'
-Plugin 'junegunn/vim-easy-align'
+"Plugin 'junegunn/vim-easy-align'
 Plugin 'tpope/vim-ragtag'
 Plugin 'vim-scripts/groovyindent'
 Plugin 'Shougo/vimproc.vim'
@@ -45,6 +45,8 @@ Plugin 'VisIncr'
 Plugin 'GEverding/vim-hocon'
 Plugin 'xolox/vim-misc'
 Plugin 'henrik/rename.vim'
+Plugin 'junegunn/vim-emoji'
+Plugin 'mxw/vim-jsx'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -102,13 +104,16 @@ autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand
 
 " IDEA-like formatting after inserting } character
 autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
+autocmd FileType java,groovy,scala inoremap <buffer> ) )<C-C>m'V[(=`'a
+
+autocmd FileType groovy nnoremap <buffer> ,bm 0f(a<cr><C-C>b%i<cr><C-C>l%wvb%ge:s/,\s*\(\w\+\):/,\r\1:/g<cr><cr>v%=
 
 " Couldn't make such a snippet
-autocmd FileType groovy,scala inoremap <buffer> ,cl private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
-autocmd FileType groovy,scala nmap <buffer> ,cl o,cl<C-C>
-autocmd FileType groovy,scala inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.slf4j.Logger")<CR>:call append(2, "import org.slf4j.LoggerFactory")<CR>`'a
+autocmd FileType groovy,scala inoremap <buffer> ,ll private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
+autocmd FileType groovy,scala nmap <buffer> ,ll o,ll<C-C>
+autocmd FileType groovy,scala inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLogger(this.getClass())<C-C>m'<CR>:call append(2, "import org.slf4j.Logger")<CR>:call append(2, "import org.slf4j.LoggerFactory")<CR>`'a
 autocmd FileType groovy,scala nmap <buffer> ,sl o,sl<C-C>
-autocmd FileType java inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLog(this.getClass());<C-C>m'<CR>:call append(2, "import org.slf4j.Logger;")<CR>:call append(2, "import org.slf4j.LoggerFactory;")<CR>`'a
+autocmd FileType java inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLogger(this.getClass());<C-C>m'<CR>:call append(2, "import org.slf4j.Logger;")<CR>:call append(2, "import org.slf4j.LoggerFactory;")<CR>`'a
 autocmd FileType java nmap <buffer> ,sl o,sl<C-C>
 
 " Jump to the base class
@@ -178,7 +183,7 @@ imap <C-h> <c-c>:bn<CR>i
 
 " encodings
 set fileencodings=utf-8,cp1251,koi8-r,ucs-2,cp866
-set encoding=utf-8
+"set encoding=utf-8
 
 " set timeout for key characters
 set tm=200
@@ -235,6 +240,7 @@ nmap <silent> ,wW :windo set invwrap<cr>
 
 " Edit the vimrc file
 nmap <silent> ,ev :e $MYVIMRC<CR>
+nmap <silent> ,sv :source $MYVIMRC<CR>
 
 " Use the bufkill plugin to eliminate a buffer but keep the window layout
 nmap ,bd :BD<cr>
@@ -290,7 +296,8 @@ autocmd BufReadPost fugitive://* set bufhidden=delete
 " AG (SilverSearcher) Settings
 "-----------------------------------------------------------------------------
 function! AgProjectRoot(pattern)
-    let l:dir = FindGitDirOrCurrent()
+    "let l:dir = FindGitDirOrCurrent()
+    let l:dir = getcwd()
     echom a:pattern . " in " . l:dir
     execute ':Ag ' . a:pattern . ' "' . dir . '"'
 endfunction
@@ -518,7 +525,7 @@ let g:easytags_languages = {
             \}
 
 function! s:updateTagsValue()
-    exe ":set tags=~/.tags,./.tags;,.tags;,$JAVA_HOME/.tags,*/target/.tags,target/.tags,*/.tags,*/target/".GetCurrentGitBranch()."/.tags,target/".GetCurrentGitBranch()."/.tags"
+    exe ":set tags=./.tags;,$HOME,$JAVA_HOME/.tags,*/.tags,*/*/.tags,*/*/*/.tags"
 endfunction
 command! -nargs=0 UpdateTagsValue call s:updateTagsValue()
 UpdateTagsValue
@@ -684,8 +691,9 @@ nmap ,fl :CtrlPLine<cr>
 nmap ,fe :CtrlP 
 nmap ,ft :CtrlPTag<cr>
 let g:ctrlp_map = ',ff'
+let g:ctrlp_working_path_mode = 'w'
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|third-party)$',
+            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|node_modules)$',
             \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
             \ 'link': 'some_bad_symbolic_links'
             \ }
@@ -694,7 +702,12 @@ let g:ctrlp_custom_ignore = {
 " EasyAlign
 "-----------------------------------------------------------------------------
 " Start interactive EasyAlign in visual mode (e.g. vip<Enter>)
-vmap = <Plug>(EasyAlign)
+"vmap = <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+"nmap ga <Plug>(EasyAlign)
+
+"-----------------------------------------------------------------------------
+" JSX
+"-----------------------------------------------------------------------------
+let g:jsx_ext_required = 0

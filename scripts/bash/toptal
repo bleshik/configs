@@ -1,0 +1,11 @@
+#!/bin/bash
+cd ~/K/toptal
+kill -9 `ps aux | grep dynamodb-local | grep -v grep | awk '{print $2}'`
+dynamodb-local -dbPath /var/dynamodb  > /dev/null &
+disown
+TMUX_SESSION='dev_toptal'
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'api' -c "$PWD/backend/api" \;\
+     new-window -n 'web-app' -c "$PWD/web-app" \;\
+     new-window \;\
+     send-keys -t $TMUX_SESSION:1 'npm start' C-m \;\
+     attach
