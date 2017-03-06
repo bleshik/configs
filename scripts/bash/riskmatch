@@ -1,20 +1,23 @@
 #!/bin/bash - 
-cd ~/K/risk
-mysqlStart
-TMUX_SESSION="dev_riskmatch$1"
-tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-site' -c "$PWD/backend/master-site" \;\
-     new-window -n 'master-worker' -c "$PWD/backend/master-worker" \;\
-     new-window -n 'broker-site' -c "$PWD/backend/broker-site" \;\
-     new-window -n 'broker-worker' -c "$PWD/backend/broker-worker" \;\
-     new-window -n 'carrier-site' -c "$PWD/backend/carrier-site" \;\
-     new-window -n 'carrier-worker' -c "$PWD/backend/carrier-worker" \;\
-     new-window -n 'carriercalc-worker' -c "$PWD/backend/carriercalc-worker" \;\
-     new-window -n 'mysql' \;\
-     new-window -n 'elasticsearch' -c "$PWD/backend/carriercalc-worker" \;\
-     new-window -n 'logs' -c "$PWD/backend/carriercalc-worker" \;\
-     send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\
-     send-keys -t $TMUX_SESSION:8 'ES_MAX_MEM=512m elasticsearch' C-m \;\
-     send-keys -t $TMUX_SESSION:9 'touch /tmp/vim-grails-refresh.log && tail -f /tmp/vim-grails-refresh.log' C-m \;\
-     split-window -v -t $TMUX_SESSION:9 \;\
-     send-keys -t $TMUX_SESSION:9 'touch /tmp/vim-sbt-refresh.log && tail -f /tmp/vim-sbt-refresh.log' C-m \;\
-     attach
+if [ ! -z "$1" ] ; then
+    ssh ubuntu@ec2-35-157-162-89.eu-central-1.compute.amazonaws.com -i ~/.ssh/remote-dev-server.pem -t riskmatch
+else
+    cd ~/K/risk
+    TMUX_SESSION="dev_riskmatch$1"
+    tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
+         new-window -n 'master-site' -c "$PWD/backend/master-site" \;\
+         new-window -n 'master-worker' -c "$PWD/backend/master-worker" \;\
+         new-window -n 'broker-site' -c "$PWD/backend/broker-site" \;\
+         new-window -n 'broker-worker' -c "$PWD/backend/broker-worker" \;\
+         new-window -n 'carrier-site' -c "$PWD/backend/carrier-site" \;\
+         new-window -n 'carrier-worker' -c "$PWD/backend/carrier-worker" \;\
+         new-window -n 'carriercalc-worker' -c "$PWD/backend/carriercalc-worker" \;\
+         new-window -n 'mysql' \;\
+         new-window -n 'elasticsearch' -c "$PWD/backend/carriercalc-worker" \;\
+         new-window -n 'logs' -c "$PWD/backend/carriercalc-worker" \;\
+         send-keys -t $TMUX_SESSION:6 'mysql -u root' C-m \;\
+         send-keys -t $TMUX_SESSION:7 'ES_MAX_MEM=512m elasticsearch' C-m \;\
+         send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
+         select-window -t "$TMUX_SESSION:0" \;\
+         attach
+fi
