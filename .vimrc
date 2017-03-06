@@ -11,7 +11,7 @@ Plugin 'vim-scripts/groovyindent'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'bleshik/vim-vebugger'
 Plugin 'henrik/vim-qargs'
-Plugin 'JavaImp.vim--Lee'
+"Plugin 'JavaImp.vim--Lee'
 Plugin 'camelcasemotion'
 Plugin 'jeetsukumaran/vim-indentwise'
 Plugin 'wikitopian/hardmode'
@@ -21,6 +21,7 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'bleshik/vim-snippets'
+Plugin 'bleshik/ensime-vim'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'bleshik/grails-vim'
 Plugin 'xolox/vim-easytags'
@@ -47,6 +48,10 @@ Plugin 'xolox/vim-misc'
 Plugin 'henrik/rename.vim'
 Plugin 'junegunn/vim-emoji'
 Plugin 'mxw/vim-jsx'
+Plugin 'Quramy/tsuquyomi'
+Plugin 'Quramy/vim-js-pretty-template'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'vim-syntastic/syntastic'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -102,11 +107,14 @@ nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
 autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
 
+set cinoptions=j1,(1s
+
 " IDEA-like formatting after inserting } character
 autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
 autocmd FileType java,groovy,scala inoremap <buffer> ) )<C-C>m'V[(=`'a
 
 autocmd FileType groovy nnoremap <buffer> ,bm 0f(a<cr><C-C>b%i<cr><C-C>l%wvb%ge:s/,\s*\(\w\+\):/,\r\1:/g<cr><cr>v%=
+autocmd FileType java,groovy,scala nnoremap <buffer> ,bc 0f{a<cr><C-C>]}i<cr><C-C>
 
 " Couldn't make such a snippet
 autocmd FileType groovy,scala inoremap <buffer> ,ll private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
@@ -204,7 +212,7 @@ set showmode
 " Disable it... every time I hit the limit I unset this anyway. It's annoying
 set textwidth=0
 " Highlight the 120th column as a recommendation for maximum amount of characters in single line for code
-autocmd FileType java,groovy,javascript,coffeescript,scala setlocal colorcolumn=120 tw=120
+autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120 tw=120
 
 " When completing by tag, show the whole tag, not just the function name
 set showfulltag
@@ -711,3 +719,26 @@ let g:ctrlp_custom_ignore = {
 " JSX
 "-----------------------------------------------------------------------------
 let g:jsx_ext_required = 0
+
+"-----------------------------------------------------------------------------
+" Syntastic
+"-----------------------------------------------------------------------------
+let g:syntastic_java_checkers = [ 'ensime' ]
+let g:syntastic_scala_checkers = [ 'ensime' ]
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:tsuquyomi_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+
+"-----------------------------------------------------------------------------
+" Ensime
+"-----------------------------------------------------------------------------
+autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
+"autocmd FileType java,scala silent :EnInstall

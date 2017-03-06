@@ -147,6 +147,10 @@ function currentGitBranch {
     git rev-parse --abbrev-ref HEAD 2>/dev/null
 }
 
+function nodebugJavaOpts {
+    echo "$JAVA_OPTS" | sed -e 's/ *-Xdebug */ /g' | sed -e 's/ *-Xrunjdwp.*address=[^ ]* */ /g'
+}
+
 function grails {
     GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/candidates/grails/current/bin/grails -reloading "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
@@ -156,26 +160,26 @@ function grails {
 }
 
 function groovy {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovy "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 12005 1`" ~/.sdkman/groovy/current/bin/groovy "$@"
     notifyLastCommand
 }
 
 function groovysh {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/groovy/current/bin/groovysh "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 11005 1`" ~/.sdkman/groovy/current/bin/groovysh "$@"
 }
 
 function java {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "$JAVA_HOME/bin/java" "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 10005 1`" "$JAVA_HOME/bin/java" "$@"
     notifyLastCommand
 }
 
 function javac {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "$JAVA_HOME/bin/javac" "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 7005 1`" "$JAVA_HOME/bin/javac" "$@"
     notifyLastCommand
 }
 
 function sbt {
-    JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" "/usr/local/bin/sbt" "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 6005 1`" "/usr/local/bin/sbt" "$@"
     notifyLastCommand
 }
 

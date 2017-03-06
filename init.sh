@@ -28,4 +28,5 @@ if [ ! -z "`which brew`" ] ; then
     brew install fzf && /usr/local/opt/fzf/install
     brew install neovim && mkdir -p ~/.config/nvim && ln -s ~/.vimrc ~/.config/nvim/init.vim && pip install neovim --user
     brew install neovim-dot-app
+    pip install websocket-client sexpdata --user
 fi

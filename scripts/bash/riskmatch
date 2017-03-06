@@ -1,6 +1,7 @@
 #!/bin/bash - 
 cd ~/K/risk
-TMUX_SESSION='dev_riskmatch'
+mysqlStart
+TMUX_SESSION="dev_riskmatch$1"
 tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'master-site' -c "$PWD/backend/master-site" \;\
      new-window -n 'master-worker' -c "$PWD/backend/master-worker" \;\
      new-window -n 'broker-site' -c "$PWD/backend/broker-site" \;\
