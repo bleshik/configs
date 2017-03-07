@@ -16,6 +16,6 @@ if [ ! -z "`which say`" ] ; then
     reattach-to-user-namespace osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\"" ; say $TITLE
 else
     if [ ! -z "`lsof -i tcp:40000`" ] ; then
-        ssh -t bleshik@localhost:40000 "notify"
+        ssh -t bleshik@localhost:40000 "notify $@"
     fi
 fi
