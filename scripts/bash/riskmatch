@@ -1,6 +1,6 @@
 #!/bin/bash - 
 if [ ! -z "$1" ] ; then
-    ssh ubuntu@ec2-35-157-162-89.eu-central-1.compute.amazonaws.com -i ~/.ssh/remote-dev-server.pem -t riskmatch
+    ssh ubuntu@remote-dev-server-riskmatch -R 40000:localhost:22 -i ~/.ssh/remote-dev-server.pem -t riskmatch
 else
     cd ~/K/risk
     TMUX_SESSION="dev_riskmatch$1"
@@ -15,9 +15,9 @@ else
          new-window -n 'mysql' \;\
          new-window -n 'elasticsearch' -c "$PWD/backend/carriercalc-worker" \;\
          new-window -n 'logs' -c "$PWD/backend/carriercalc-worker" \;\
+         send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
          send-keys -t $TMUX_SESSION:8 'mysql -u root' C-m \;\
          send-keys -t $TMUX_SESSION:9 'ES_MAX_MEM=512m elasticsearch' C-m \;\
-         send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
          select-window -t "$TMUX_SESSION:0" \;\
          attach
 fi
