@@ -17,6 +17,7 @@ ln -sFf $PWD/git-hooks ~/.git-hooks
 ln -sFf $PWD/.gradle-tab-completion.bash ~/.gradle-tab-completion.bash
 ln -sFf $PWD/grails/.grails-completion.sh ~/.grails-completion.sh
 ln -sFf $PWD/scripts ~/.scripts
+ln -sFf $PWD/tmux ~/.tmux
 ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf $PWD/sbt/plugins/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
 ln -sFf /dev/null ~/.bash_history

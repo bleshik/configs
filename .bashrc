@@ -1,3 +1,9 @@
+if [ ! -z "$SSH_AUTH_SOCK" ] ; then
+    ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+else
+    ssh-agent bash
+fi
+
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
@@ -190,7 +196,6 @@ function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifcon
 function ctagsJava {
     [ ! -f "$JAVA_HOME/.tags" ] && [ -f "$JAVA_HOME/src.zip" ] && unzip -f "$JAVA_HOME/src.zip" >&/dev/null && echo "Tagging JDK..." && ctags -a -f "$JAVA_HOME/.tags" -R "$JAVA_HOME/src"
 }
-ctagsJava &
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
