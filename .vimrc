@@ -742,3 +742,8 @@ let g:syntastic_check_on_wq = 0
 "-----------------------------------------------------------------------------
 autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
 "autocmd FileType java,scala silent :EnInstall
+
+"-----------------------------------------------------------------------------
+" json-vim
+"-----------------------------------------------------------------------------
+set conceallevel=0
