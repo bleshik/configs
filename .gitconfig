@@ -1,6 +1,6 @@
 [user]
     email = bleshik@gmail.com
-    name = Alexey Balchunas
+	name = Alexey Balchunas
 [alias]
     st = status
     ci = commit

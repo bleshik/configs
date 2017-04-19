@@ -21,7 +21,7 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 Plugin 'SirVer/ultisnips'
 Plugin 'bleshik/vim-snippets'
-Plugin 'bleshik/ensime-vim'
+"Plugin 'bleshik/ensime-vim'
 Plugin 'Valloric/YouCompleteMe'
 "Plugin 'bleshik/grails-vim'
 Plugin 'xolox/vim-easytags'
@@ -212,7 +212,12 @@ set showmode
 " Disable it... every time I hit the limit I unset this anyway. It's annoying
 set textwidth=0
 " Highlight the 120th column as a recommendation for maximum amount of characters in single line for code
-autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120 tw=120
+autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120
+set cursorcolumn
+" Highlight the current line and column
+" Don't do this - It makes window redraws painfully slow
+"set nocursorline
+"set nocursorcolumn
 
 " When completing by tag, show the whole tag, not just the function name
 set showfulltag
@@ -252,11 +257,6 @@ nmap <silent> ,sv :source $MYVIMRC<CR>
 
 " Use the bufkill plugin to eliminate a buffer but keep the window layout
 nmap ,bd :BD<cr>
-
-" Highlight the current line and column
-" Don't do this - It makes window redraws painfully slow
-set nocursorline
-set nocursorcolumn
 
 " use nonumber by default and toogle if needed
 set nonumber
@@ -723,10 +723,9 @@ let g:jsx_ext_required = 0
 "-----------------------------------------------------------------------------
 " Syntastic
 "-----------------------------------------------------------------------------
-let g:syntastic_java_checkers = [ 'ensime' ]
-let g:syntastic_scala_checkers = [ 'ensime' ]
+"let g:syntastic_java_checkers = [ 'ensime' ]
+"let g:syntastic_scala_checkers = [ 'ensime' ]
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 
 let g:tsuquyomi_disable_quickfix = 1
@@ -740,7 +739,7 @@ let g:syntastic_check_on_wq = 0
 "-----------------------------------------------------------------------------
 " Ensime
 "-----------------------------------------------------------------------------
-autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
+"autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
 "autocmd FileType java,scala silent :EnInstall
 
 "-----------------------------------------------------------------------------
