@@ -1,7 +1,8 @@
 #!/bin/bash - 
 if [ ! -z "$1" ] ; then
     IP=`aws ec2 describe-instances --profile rm --region eu-central-1 | grep PublicIp | tail -1 | sed -e 's/.*PublicIp":[^\"]*"\([^"]*\).*/\1/g'`
-    ssh ubuntu@$IP -R 40000:localhost:22 -i ~/.ssh/remote-dev-server.pem -t riskmatch
+    (cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo "$IP remote-dev-server-riskmatch") > /etc/hosts
+    ssh ubuntu@$IP -R 40000:localhost:22 -i ~/.ssh/remote-dev-server.pem -t "(cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo '$IP remote-dev-server-riskmatch') > /etc/hosts; riskmatch"
 else
     cd ~/K/risk
     TMUX_SESSION="dev_riskmatch$1"

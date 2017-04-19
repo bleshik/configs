@@ -93,9 +93,9 @@ set ruler
 set cpoptions+=$
 
 " Copy current file path
-nmap ,cp :let @a = expand("%")<CR>:call system("pbcopy", getreg("a"))<CR>
+nmap ,cp :let @" = expand("%")<CR>:call system("pbcopy", getreg('"'))<CR>:echom getreg('"')<CR>
 " Same, but with line number
-nmap ,cl :let @a = expand("%")<CR>:call system("pbcopy", getreg("a").":".line("."))<CR>
+nmap ,cl :let @" = expand("%").":".line(".")<CR>:call system("pbcopy", getreg('"'))<CR>:echom getreg('"')<CR>
 " Create a new file in the same directory
 nmap ,cn :let @a = expand("%:h")<CR>:e <C-R>a/
 " Move the current file
@@ -311,7 +311,7 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let g:ag_prg = 'ag --ignore-dir=target --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
+let g:ag_prg = 'ag --ignore-dir=dist --ignore-dir=target --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -701,7 +701,7 @@ nmap ,ft :CtrlPTag<cr>
 let g:ctrlp_map = ',ff'
 let g:ctrlp_working_path_mode = 'w'
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|node_modules)$',
+            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|dist|node_modules)$',
             \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
             \ 'link': 'some_bad_symbolic_links'
             \ }
@@ -746,4 +746,4 @@ autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
 "-----------------------------------------------------------------------------
 " json-vim
 "-----------------------------------------------------------------------------
-set conceallevel=0
+let g:vim_json_syntax_conceal = 0

@@ -1,1 +1,1 @@
-/home/ubuntu/configs/.vim
+/Users/bleshik/configs/.vim
