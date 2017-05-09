@@ -1,6 +1,6 @@
 #!/bin/bash - 
 if [ ! -z "$1" ] ; then
-    IP=`aws ec2 describe-instances --profile rm --region eu-central-1 | grep PublicIp | tail -1 | sed -e 's/.*PublicIp":[^\"]*"\([^"]*\).*/\1/g'`
+    IP=`aws ec2 describe-instances --region eu-central-1 | grep PublicIp | tail -1 | sed -e 's/.*PublicIp":[^\"]*"\([^"]*\).*/\1/g'`
     (cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo "$IP remote-dev-server-riskmatch") > /etc/hosts
     ssh ubuntu@$IP -R 40000:localhost:22 -i ~/.ssh/remote-dev-server.pem -t "(cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo '$IP remote-dev-server-riskmatch') > /etc/hosts; riskmatch"
 else

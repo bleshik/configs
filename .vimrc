@@ -282,8 +282,9 @@ inoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 
 command! -nargs=1 ImportClass call ImportClass(<q-args>)
-nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
-nmap ,ii :ImportClass 
+autocmd FileType java,groovy,scala nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
+autocmd FileType java,groovy,scala nmap ,ii :ImportClass 
+autocmd FileType typescript nmap ,i :TsuImport<CR>
 
 "-----------------------------------------------------------------------------
 " Fugitive
@@ -719,6 +720,11 @@ let g:ctrlp_custom_ignore = {
 " JSX
 "-----------------------------------------------------------------------------
 let g:jsx_ext_required = 0
+
+"-----------------------------------------------------------------------------
+" Tsuquyomi
+"-----------------------------------------------------------------------------
+let g:tsuquyomi_shortest_import_path = 1
 
 "-----------------------------------------------------------------------------
 " Syntastic
