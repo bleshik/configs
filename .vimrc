@@ -105,7 +105,7 @@ nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
 command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
 nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
-autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>
+autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>:echom getreg('"')<CR>
 
 set cinoptions=j1,(1s
 
