@@ -156,7 +156,7 @@ if has('gui_running')
 endif
 
 "For Cyrilic
-set keymap=russian-jcukenwin
+"set keymap=russian-jcukenwin
 set iminsert=0
 set imsearch=0
 highlight lCursor guifg=NONE guibg=Cyan
@@ -725,6 +725,7 @@ let g:jsx_ext_required = 0
 " Tsuquyomi
 "-----------------------------------------------------------------------------
 let g:tsuquyomi_shortest_import_path = 1
+let g:tsuquyomi_single_quote_import = 1
 
 "-----------------------------------------------------------------------------
 " Syntastic

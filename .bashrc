@@ -166,12 +166,12 @@ function grails {
 }
 
 function groovy {
-    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 12005 1`" ~/.sdkman/groovy/current/bin/groovy "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 12005 1`" ~/.sdkman/candidates/groovy/current/bin/groovy "$@"
     notifyLastCommand
 }
 
 function groovysh {
-    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 11005 1`" ~/.sdkman/groovy/current/bin/groovysh "$@"
+    JAVA_OPTS="`nodebugJavaOpts` -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 11005 1`" ~/.sdkman/candidates/groovy/current/bin/groovysh "$@"
 }
 
 function java {
