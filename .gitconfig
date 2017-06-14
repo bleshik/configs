@@ -29,3 +29,5 @@
     cmd = vim -c \"/\\(<<<<<<<\\|=======\\|>>>>>>>\\).*\" \"$MERGED\"
 [help]
 	autocorrect = 5
+[url "git@github.com:"]
+    insteadOf = "https://github.com/"

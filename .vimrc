@@ -51,7 +51,7 @@ Plugin 'mxw/vim-jsx'
 Plugin 'Quramy/tsuquyomi'
 Plugin 'Quramy/vim-js-pretty-template'
 Plugin 'leafgarland/typescript-vim'
-Plugin 'vim-syntastic/syntastic'
+"Plugin 'vim-syntastic/syntastic'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -199,6 +199,7 @@ set tm=200
 " ESC on jk
 imap jk <c-c>:w<cr>
 vmap jk <c-c>
+inoremap <esc> <NOP>
 
 " Make command line two lines high
 set ch=2
@@ -724,8 +725,9 @@ let g:jsx_ext_required = 0
 "-----------------------------------------------------------------------------
 " Tsuquyomi
 "-----------------------------------------------------------------------------
-let g:tsuquyomi_shortest_import_path = 1
+let g:tsuquyomi_shortest_import_path = 0
 let g:tsuquyomi_single_quote_import = 1
+let g:tsuquyomi_use_local_typescript = 0
 
 "-----------------------------------------------------------------------------
 " Syntastic
