@@ -111,7 +111,7 @@ set cinoptions=j1,(1s
 
 " IDEA-like formatting after inserting } character
 autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
-autocmd FileType java,groovy,scala inoremap <buffer> ) )<C-C>m'V[(=`'a
+"autocmd FileType java,groovy,scala inoremap <buffer> ) )<C-C>m'V[(=`'a
 
 autocmd FileType groovy nnoremap <buffer> ,bm 0f(a<cr><C-C>b%i<cr><C-C>l%wvb%ge:s/,\s*\(\w\+\):/,\r\1:/g<cr><cr>v%=
 autocmd FileType java,groovy,scala nnoremap <buffer> ,bc 0f{a<cr><C-C>]}i<cr><C-C>
