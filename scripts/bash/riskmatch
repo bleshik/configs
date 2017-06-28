@@ -13,13 +13,11 @@ else
          new-window -n 'broker-worker' -c "$PWD/backend/broker-worker" \;\
          new-window -n 'carrier-site' -c "$PWD/backend/carrier-site" \;\
          new-window -n 'carrier-worker' -c "$PWD/backend/carrier-worker" \;\
-         new-window -n 'carriercalc-worker' -c "$PWD/backend/carriercalc-worker" \;\
          new-window -n 'mysql' \;\
-         new-window -n 'elasticsearch' -c "$PWD/backend/carriercalc-worker" \;\
-         new-window -n 'logs' -c "$PWD/backend/carriercalc-worker" \;\
+         new-window -n 'carrier' -c "$PWD/backend-v2/carrier" \;\
+         new-window -n 'broker' -c "$PWD/backend-v2/broker" \;\
          send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
-         send-keys -t $TMUX_SESSION:8 'mysql -u root' C-m \;\
-         send-keys -t $TMUX_SESSION:9 'ES_MAX_MEM=512m elasticsearch' C-m \;\
+         send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\
          select-window -t "$TMUX_SESSION:0" \;\
          attach
 fi

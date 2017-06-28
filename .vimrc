@@ -197,7 +197,7 @@ set fileencodings=utf-8,cp1251,koi8-r,ucs-2,cp866
 set tm=200
 
 " ESC on jk
-imap jk <c-c>:w<cr>
+imap jk <c-c>
 vmap jk <c-c>
 inoremap <esc> <NOP>
 
@@ -542,7 +542,7 @@ UpdateTagsValue
 
 function! s:updateGrailsTags()
     call s:updateTagsValue() 
-    call system('(find ~/.sdkman/grails/current/lib | grep "\.jar" | grep -v sources | grep -v javadoc | sed -e "s/.*\/lib\///g" | while read line ; do echo $line && [ ! -f ~/.sdkman/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\/jars.*//g" | sed -e "s/\./\//g"`/`echo $line | sed -e "s/.*jars\///g" | sed -e "s/\(.*\)-\(.*\)\.jar/\2\/\1-\2-sources.jar/g"` > ~/.sdkman/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done ; for i in `(find ~/.sdkman/grails/current/lib -name "*sources*.jar" ; find ~/.m2/repository/ -name "*sources*.jar")` ; do tar -xvf $i -C `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/grails/current/lib && ctags -R -a -f .tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-grails-refresh.log &')
+    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (cd $i/../;grails refresh-dependencies --include-source) ; done ; find ~/.sdkman/candidates/grails/current/lib | grep "\.jar" | grep -v sources | grep -v javadoc | sed -e "s/.*\/lib\///g" | while read line ; do echo $line && [ ! -f ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\/jars.*//g" | sed -e "s/\./\//g"`/`echo $line | sed -e "s/.*jars\///g" | sed -e "s/\(.*\)-\(.*\)\.jar/\2\/\1-\2-sources.jar/g"` > ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done ; for i in `(find ~/.sdkman/candidates/grails/current/lib -name "*sources*.jar" ; find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip $i -d `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/candidates/grails/current/lib && ctags -R -a -f .tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-grails-refresh.log &')
 endfunction
 command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
 
