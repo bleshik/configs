@@ -135,6 +135,7 @@ PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
+PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
 
 function notifyLastCommand {
     CODE=$?
@@ -203,3 +204,10 @@ SDKMAN_INIT=false
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# tabtab source for serverless package
+# uninstall by removing these lines or running `tabtab uninstall serverless`
+[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.bash ] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.bash
+# tabtab source for sls package
+# uninstall by removing these lines or running `tabtab uninstall sls`
+[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.bash ] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.bash

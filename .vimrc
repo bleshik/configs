@@ -199,7 +199,7 @@ set tm=200
 " ESC on jk
 imap jk <c-c>
 vmap jk <c-c>
-inoremap <esc> <NOP>
+"inoremap <esc> <NOP>
 
 " Make command line two lines high
 set ch=2
