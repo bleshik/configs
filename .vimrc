@@ -52,6 +52,7 @@ Plugin 'Quramy/tsuquyomi'
 Plugin 'Quramy/vim-js-pretty-template'
 Plugin 'leafgarland/typescript-vim'
 "Plugin 'vim-syntastic/syntastic'
+Plugin 'udalov/kotlin-vim'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -283,8 +284,8 @@ inoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 
 command! -nargs=1 ImportClass call ImportClass(<q-args>)
-autocmd FileType java,groovy,scala nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
-autocmd FileType java,groovy,scala nmap ,ii :ImportClass 
+autocmd FileType java,groovy,scala,kotlin nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
+autocmd FileType java,groovy,scala,kotlin nmap ,ii :ImportClass 
 autocmd FileType typescript nmap ,i :TsuImport<CR>
 
 "-----------------------------------------------------------------------------
@@ -531,11 +532,13 @@ let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_languages = {
             \   'groovy': {
+            \   },
+            \   'kotlin': {
             \   }
             \}
 
 function! s:updateTagsValue()
-    exe ":set tags=./.tags;,$HOME,$JAVA_HOME/.tags,*/.tags,*/*/.tags,*/*/*/.tags"
+    exe ":set tags=./.tags;,$HOME/.m2/.tags,$HOME,$JAVA_HOME/.tags,*/.tags,*/*/.tags,*/*/*/.tags"
 endfunction
 command! -nargs=0 UpdateTagsValue call s:updateTagsValue()
 UpdateTagsValue
@@ -550,6 +553,11 @@ function! s:updateSbtTags()
     call system('(for i in `find . -name "build.sbt"` ; do (echo $i; cd "`dirname $i`"; rm -f .tags; sbt gen-ctags 2>&1) ; done && echo "Done" && date) >> /tmp/vim-sbt-refresh.log &')
 endfunction
 command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
+
+function! s:updateMavenTags()
+    call system('(find ~/.m2 | grep "\.jar$" | grep -v sources | grep -v javadoc | sed -e "s/.*\/repository\///g" | while read line ; do [ ! -f ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && echo $line && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\.jar$/-sources.jar/g"` > ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done; for i in `(find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip $i -d `dirname $i` 2>&1 ; done ; echo "Tagging m2 stuff" && ctags -R -a -f ~/.m2/.tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-m2-refresh.log &')
+endfunction
+command! -nargs=0 UpdateMavenTags call s:updateMavenTags()
 
 "-----------------------------------------------------------------------------
 " Fix constant spelling mistakes
@@ -748,8 +756,8 @@ let g:syntastic_check_on_wq = 0
 "-----------------------------------------------------------------------------
 " Ensime
 "-----------------------------------------------------------------------------
-"autocmd BufWritePost *.java,*.scala silent :EnTypeCheck
-"autocmd FileType java,scala silent :EnInstall
+"autocmd BufWritePost *.java,*.scala,*.kt silent :EnTypeCheck
+"autocmd FileType java,scala,kotlin silent :EnInstall
 
 "-----------------------------------------------------------------------------
 " json-vim
