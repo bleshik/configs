@@ -53,6 +53,7 @@ Plugin 'Quramy/vim-js-pretty-template'
 Plugin 'leafgarland/typescript-vim'
 "Plugin 'vim-syntastic/syntastic'
 Plugin 'udalov/kotlin-vim'
+Plugin 'tfnico/vim-gradle'
 call vundle#end()
 filetype plugin indent on
 syntax on
@@ -314,7 +315,7 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let g:ag_prg = 'ag --ignore-dir=dist --ignore-dir=target --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
+let g:ag_prg = 'ag --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -390,7 +391,7 @@ function! GetPackage(filename)
 endfunction
 
 function! GuessPackage(filename)
-    let l:stopWords = [ "sbt-ctags-dep-srcs", "domain", "taglib", "integration", "unit", "services", "controllers", "jobs", "groovy", "java", fnamemodify(a:filename, ":e") ]
+    let l:stopWords = [ "sbt-ctags-dep-srcs", "domain", "taglib", "integration", "unit", "services", "controllers", "jobs", "groovy", "java", "kotlin", "scala", fnamemodify(a:filename, ":e") ]
     let l:skipWords = [ ]
     if match(fnamemodify(a:filename, ":p"), $JAVA_HOME) >= 0
         call add(l:stopWords, "src")
@@ -545,7 +546,7 @@ UpdateTagsValue
 
 function! s:updateGrailsTags()
     call s:updateTagsValue() 
-    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (cd $i/../;grails refresh-dependencies --include-source) ; done ; find ~/.sdkman/candidates/grails/current/lib | grep "\.jar" | grep -v sources | grep -v javadoc | sed -e "s/.*\/lib\///g" | while read line ; do echo $line && [ ! -f ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\/jars.*//g" | sed -e "s/\./\//g"`/`echo $line | sed -e "s/.*jars\///g" | sed -e "s/\(.*\)-\(.*\)\.jar/\2\/\1-\2-sources.jar/g"` > ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done ; for i in `(find ~/.sdkman/candidates/grails/current/lib -name "*sources*.jar" ; find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip $i -d `dirname $i` 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/candidates/grails/current/lib && ctags -R -a -f .tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-grails-refresh.log &')
+    call system('(for i in `find . -name "grails-app" | grep -v target` ; do (cd $i/../;grails refresh-dependencies --include-source) ; done ; find ~/.sdkman/candidates/grails/current/lib | grep "\.jar" | grep -v sources | grep -v javadoc | sed -e "s/.*\/lib\///g" | while read line ; do echo $line && [ ! -f ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\/jars.*//g" | sed -e "s/\./\//g"`/`echo $line | sed -e "s/.*jars\///g" | sed -e "s/\(.*\)-\(.*\)\.jar/\2\/\1-\2-sources.jar/g"` > ~/.sdkman/candidates/grails/current/lib/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done ; for i in `(find ~/.sdkman/candidates/grails/current/lib -name "*sources*.jar" ; find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip -od `dirname $i` $i 2>&1 ; done ; echo "Tagging Grails stuff" && ctags -R -a -f .tags ~/.sdkman/candidates/grails/current/lib && ctags -R -a -f .tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-grails-refresh.log &')
 endfunction
 command! -nargs=0 UpdateGrailsTags call s:updateGrailsTags()
 
@@ -555,7 +556,7 @@ endfunction
 command! -nargs=0 UpdateSbtTags call s:updateSbtTags()
 
 function! s:updateMavenTags()
-    call system('(find ~/.m2 | grep "\.jar$" | grep -v sources | grep -v javadoc | sed -e "s/.*\/repository\///g" | while read line ; do [ ! -f ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && echo $line && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\.jar$/-sources.jar/g"` > ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done; for i in `(find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip $i -d `dirname $i` 2>&1 ; done ; echo "Tagging m2 stuff" && ctags -R -a -f ~/.m2/.tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-m2-refresh.log &')
+    call system('(find ~/.m2 | grep "\.jar$" | grep -v sources | grep -v javadoc | sed -e "s/.*\/repository\///g" | while read line ; do [ ! -f ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` ] && echo $line && curl --fail -L http://search.maven.org/remotecontent?filepath=`echo $line | sed -e "s/\.jar$/-sources.jar/g"` > ~/.m2/repository/`echo $line | sed -e "s/\.jar/-sources.jar/g"` && echo Downloaded $line ; done; for i in `(find ~/.m2/repository/ -name "*sources*.jar")` ; do unzip -od `dirname $i` $i 2>&1 ; done ; echo "Tagging m2 stuff" && ctags -R -a -f ~/.m2/.tags ~/.m2/repository && echo "Done" && date) >> /tmp/vim-m2-refresh.log &')
 endfunction
 command! -nargs=0 UpdateMavenTags call s:updateMavenTags()
 

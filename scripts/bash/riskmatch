@@ -14,8 +14,7 @@ else
          new-window -n 'carrier-site' -c "$PWD/backend/carrier-site" \;\
          new-window -n 'carrier-worker' -c "$PWD/backend/carrier-worker" \;\
          new-window -n 'mysql' \;\
-         new-window -n 'carrier' -c "$PWD/backend-v2/carrier" \;\
-         new-window -n 'broker' -c "$PWD/backend-v2/broker" \;\
+         new-window -n 'backend-v2' -c "$PWD/backend-v2" \;\
          send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
          send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\
          select-window -t "$TMUX_SESSION:0" \;\
