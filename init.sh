@@ -21,6 +21,7 @@ ln -sFf $PWD/tmux ~/.tmux
 ln -sFf $PWD/.bash_plugins ~/.bash_plugins
 ln -sFf $PWD/sbt/plugins/plugins.sbt ~/.sbt/0.13/plugins/plugins.sbt
 ln -sFf /dev/null ~/.bash_history
+git submodule init
 git submodule update --init --recursive
 if [ ! -z "`which brew`" ] ; then
     brew install tmux
