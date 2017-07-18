@@ -131,11 +131,11 @@ source ~/.gradle-tab-completion.bash
 PATH=/Applications/MacVim.app/Contents/MacOS:$PATH
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 PATH=$PATH:$HOME/.scripts_additional/bash
-PATH=$PATH:$HOME/.scripts/bash
 PATH=$PATH:$HOME/.git-hooks
 PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
+PATH=$HOME/.scripts/bash:$PATH
 
 function notifyLastCommand {
     CODE=$?

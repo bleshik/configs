@@ -1,0 +1,3 @@
+#!/bin/sh
+
+AWS_ACCESS_KEY_ID=mykey AWS_SECRET_ACCESS_KEY=mysecret DYNAMO_ENDPOINT=http://localhost:8000 ~/.config/yarn/global/node_modules/.bin/dynamodb-admin
