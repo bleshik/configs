@@ -6,14 +6,14 @@ if [ ! -z "$1" ] ; then
 else
     cd ~/K/risk
     TMUX_SESSION="dev_riskmatch$1"
-    tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
-         new-window -n 'master-site' -c "$PWD/backend/master-site" \;\
-         new-window -n 'master-worker' -c "$PWD/backend/master-worker" \;\
-         new-window -n 'broker-site' -c "$PWD/backend/broker-site" \;\
-         new-window -n 'broker-worker' -c "$PWD/backend/broker-worker" \;\
-         new-window -n 'carrier-site' -c "$PWD/backend/carrier-site" \;\
-         new-window -n 'carrier-worker' -c "$PWD/backend/carrier-worker" \;\
-         new-window -n 'mysql' \;\
+    tmux -CC attach -t $TMUX_SESSION || tmux -CC new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
+         new-window -n 'MS' -c "$PWD/backend/master-site" \;\
+         new-window -n 'MW' -c "$PWD/backend/master-worker" \;\
+         new-window -n 'BS' -c "$PWD/backend/broker-site" \;\
+         new-window -n 'BW' -c "$PWD/backend/broker-worker" \;\
+         new-window -n 'CS' -c "$PWD/backend/carrier-site" \;\
+         new-window -n 'CW' -c "$PWD/backend/carrier-worker" \;\
+         new-window -n 'MySQL' \;\
          new-window -n 'backend-v2' -c "$PWD/backend-v2" \;\
          send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
          send-keys -t $TMUX_SESSION:7 'mysql -u root' C-m \;\

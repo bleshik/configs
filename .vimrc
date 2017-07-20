@@ -521,8 +521,9 @@ endfunction
 " EasyTags
 "-----------------------------------------------------------------------------
 command! -nargs=1 GoToJvmType call GoToJvmType(<q-args>)
-nmap <C-]> :execute ":call GoToJvmType('" . expand("<cword>") . "')"<cr>
-nmap ,tt :GoToJvmType 
+autocmd FileType java,groovy,scala,kotlin nmap <buffer> <C-]> :execute ":call GoToJvmType('" . expand("<cword>") . "')"<cr>
+autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,tt :GoToJvmType 
+autocmd FileType typescript nmap <buffer> ,tt :TsuDefinition 
 " Do not update tags automatically
 let g:easytags_events = []
 let g:easytags_file = '.tags'
@@ -532,6 +533,8 @@ let g:home_code_dir = '/Users/bleshik/K'
 let g:easytags_async = 1
 let g:easytags_auto_highlight = 0
 let g:easytags_languages = {
+            \   'scala': {
+            \   },
             \   'groovy': {
             \   },
             \   'kotlin': {
