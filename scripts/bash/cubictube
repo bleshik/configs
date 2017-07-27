@@ -2,7 +2,7 @@
 cd ~/K/cubictube
 #kill -9 `ps aux | grep dynamodb-local | grep -v grep | awk '{print $2}'`
 TMUX_SESSION='dev_cubictube'
-tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
+tmux -CC attach -t $TMUX_SESSION || tmux -CC new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
      new-window -n 'api' -c "$PWD/backend/api" \;\
      new-window -n 'web-app' -c "$PWD/web-app" \;\
      new-window \;\

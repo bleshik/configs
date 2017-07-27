@@ -215,8 +215,9 @@ set showmode
 " Disable it... every time I hit the limit I unset this anyway. It's annoying
 set textwidth=0
 " Highlight the 120th column as a recommendation for maximum amount of characters in single line for code
-autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120
-set cursorcolumn
+"autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120
+" this is too slow
+"set cursorcolumn
 " Highlight the current line and column
 " Don't do this - It makes window redraws painfully slow
 "set nocursorline
@@ -315,7 +316,8 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let g:ag_prg = 'ag --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --vimgrep'
+let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=data --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
+let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -687,6 +689,9 @@ nmap ,vk :VBGkill<CR>
 "-----------------------------------------------------------------------------
 " CtrlP
 "-----------------------------------------------------------------------------
+if executable('ag')
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g "" '.s:ag_ignore
+endif
 let g:ctrlp_extensions = ['tag', 'buffertag', 'dir', 'rtscript', 'line', 'changes', 'mixed']
 let g:ctrlp_mruf_default_order  = 0
 let g:ctrlp_by_filename         = 0

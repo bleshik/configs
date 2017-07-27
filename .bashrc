@@ -95,9 +95,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 # ~/.bash_aliases, instead of adding them here directly.
 # See /usr/share/doc/bash-doc/examples in the bash-doc package.
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+[ -f ~/.bash_aliases ] && source ~/.bash_aliases
 
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
@@ -119,6 +117,13 @@ fi
 if [ -f ~/.ssh/config ] ; then
     complete -o default -o nospace -W "$(/usr/bin/env ruby -ne 'puts $_.split(/[,\s]+/)[1..-1].reject{|host| host.match(/\*|\?/)} if $_.match(/^\s*Host\s+/);' < $HOME/.ssh/config)" scp sftp ssh
 fi
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+SDKMAN_INIT=false
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 export EDITOR=vim
 export GIT_EDITOR=vim
@@ -159,7 +164,7 @@ function nodebugJavaOpts {
 }
 
 function grails {
-    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/candidates/grails/current/bin/grails -reloading "$@" -Dgrails.project.work.dir="target/`currentGitBranch`" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
+    GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/candidates/grails/current/bin/grails -reloading "$@" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
     CODE=$?
     ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
@@ -195,19 +200,5 @@ function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifcon
 
 # Create tags for the JDK
 function ctagsJava {
-    [ ! -f "$JAVA_HOME/.tags" ] && [ -f "$JAVA_HOME/src.zip" ] && unzip -f "$JAVA_HOME/src.zip" >&/dev/null && echo "Tagging JDK..." && ctags -a -f "$JAVA_HOME/.tags" -R "$JAVA_HOME/src"
+    cd $JAVA_HOME && [ ! -f .tags ] && [ -f src.zip ] && unzip -od src src.zip && echo "Tagging JDK..." && ctags -a -f .tags -R src
 }
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
-SDKMAN_INIT=false
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-# tabtab source for serverless package
-# uninstall by removing these lines or running `tabtab uninstall serverless`
-[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.bash ] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/serverless.bash
-# tabtab source for sls package
-# uninstall by removing these lines or running `tabtab uninstall sls`
-[ -f /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.bash ] && . /usr/local/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.bash
