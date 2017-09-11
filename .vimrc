@@ -107,16 +107,15 @@ nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
 command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
 nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
 " Copy Java canonical class name
-autocmd FileType java,groovy,scala nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>:echom getreg('"')<CR>
+autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,cc :let @" = GetPackage(expand("%")).".".expand("%:t:r")<CR>:call system("pbcopy", getreg("\""))<CR>:echom getreg('"')<CR>
 
 set cinoptions=j1,(1s
 
 " IDEA-like formatting after inserting } character
-autocmd FileType java,groovy,scala inoremap <buffer> } }<C-C>m'V[{=`'a
-"autocmd FileType java,groovy,scala inoremap <buffer> ) )<C-C>m'V[(=`'a
+autocmd FileType java,groovy,scala,kotlin inoremap <buffer> } }<C-C>m'V[{=`'a
 
 autocmd FileType groovy nnoremap <buffer> ,bm 0f(a<cr><C-C>b%i<cr><C-C>l%wvb%ge:s/,\s*\(\w\+\):/,\r\1:/g<cr><cr>v%=
-autocmd FileType java,groovy,scala nnoremap <buffer> ,bc 0f{a<cr><C-C>]}i<cr><C-C>
+autocmd FileType java,groovy,scala,kotlin nnoremap <buffer> ,bc 0f{a<cr><C-C>]}i<cr><C-C>
 
 " Couldn't make such a snippet
 autocmd FileType groovy,scala inoremap <buffer> ,ll private final Log log = LogFactory.getLog(this.getClass())<C-C>m'<CR>:call append(2, "import org.apache.commons.logging.Log")<CR>:call append(2, "import org.apache.commons.logging.LogFactory")<CR>`'a
@@ -286,9 +285,9 @@ inoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 nnoremap <F2> <Esc>o<Esc>kyWjPA<BS><Space>
 
 command! -nargs=1 ImportClass call ImportClass(<q-args>)
-autocmd FileType java,groovy,scala,kotlin nmap ,i :execute ":ImportClass ".expand("<cword>") <CR>
-autocmd FileType java,groovy,scala,kotlin nmap ,ii :ImportClass 
-autocmd FileType typescript nmap ,i :TsuImport<CR>
+autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,i :execute ":ImportClass ".expand("<cword>") <CR>
+autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,ii :ImportClass 
+autocmd FileType typescript nmap <buffer> ,i :TsuImport<CR>
 
 "-----------------------------------------------------------------------------
 " Fugitive

@@ -2,13 +2,15 @@
 cd ~/K/cubictube
 #kill -9 `ps aux | grep dynamodb-local | grep -v grep | awk '{print $2}'`
 TMUX_SESSION='dev_cubictube'
-tmux -CC attach -t $TMUX_SESSION || tmux -CC new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'vim' -c "$PWD" \;\
      new-window -n 'api' -c "$PWD/backend/api" \;\
+     new-window -n 'billing' -c "$PWD/backend/billing" \;\
      new-window -n 'web-app' -c "$PWD/web-app" \;\
-     new-window \;\
-     send-keys -t $TMUX_SESSION:0 'vim' C-m \;\
+     new-window -n 'dynamodb' -c "$PWD/backend/dynamodb" \;\
+     #send-keys -t $TMUX_SESSION:0 'title "cubictube"; vim' C-m \;\
      send-keys -t $TMUX_SESSION:1 'npm start' C-m \;\
      send-keys -t $TMUX_SESSION:2 'npm start' C-m \;\
-     send-keys -t $TMUX_SESSION:3 'dynamodb-local -sharedDb -dbPath /var/dynamodb' C-m \;\
+     send-keys -t $TMUX_SESSION:3 'npm start' C-m \;\
+     send-keys -t $TMUX_SESSION:4 'dynamodb-local -sharedDb -dbPath /var/dynamodb' C-m \;\
      select-window -t "$TMUX_SESSION:0" \;\
      attach

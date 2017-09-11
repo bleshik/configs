@@ -58,16 +58,7 @@ fi
 #    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 #fi
 PS1="\`if [ \$? = 0 ] ; then echo '\[\e[35;1m\]\!:\[\e[0;32m\](\[\e[30;1m\]\u@\h\[\e[0;32m\]|\[\e[30;1m\]\j\[\e[0;32m\]|\[\e[30;1m\]\w\[\e[0;32m\])->\[\e[0m\]' ; else echo '\[\e[35;1m\]\!:\[\e[31;1m\](\[\e[30;1m\]\u@\h\[\e[31;1m\]|\[\e[30;1m\]\j\[\e[31;1m\]|\[\e[30;1m\]\w\[\e[31;1m\])->\[\e[0m\]' ; fi\`"
-unset color_prompt force_color_prompt
-
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+#unset color_prompt force_color_prompt
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -167,7 +158,7 @@ function grails {
     GRAILS_OPTS="$GRAILS_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=`find_free_port.sh 5005 1`" ~/.sdkman/candidates/grails/current/bin/grails -reloading "$@" --verbose --stacktrace | tee >(while read line; do if [ ! -z "`echo $line | grep 'Server running'`" ] ; then notify "`echo $line | sed -e 's/.*http/http/g'`" "Server running" ; fi ; done) ; test ${PIPESTATUS[0]} -eq 0
     notifyLastCommand
     CODE=$?
-    ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
+    #ctags -a -R -f "target/`currentGitBranch`/.tags" "target/`currentGitBranch`/plugins"
     return $CODE
 }
 
