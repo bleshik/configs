@@ -2,59 +2,61 @@
 let g:python_host_prog='/usr/local/bin/python'
 set nocompatible
 filetype off
-set runtimepath+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'tpope/vim-commentary'
-"Plugin 'junegunn/vim-easy-align'
-Plugin 'tpope/vim-ragtag'
-Plugin 'vim-scripts/groovyindent'
-Plugin 'Shougo/vimproc.vim'
-Plugin 'bleshik/vim-vebugger'
-Plugin 'henrik/vim-qargs'
-"Plugin 'JavaImp.vim--Lee'
-Plugin 'camelcasemotion'
-Plugin 'jeetsukumaran/vim-indentwise'
-Plugin 'wikitopian/hardmode'
-Plugin 'Alotor/groovim'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-Plugin 'SirVer/ultisnips'
-Plugin 'bleshik/vim-snippets'
-"Plugin 'bleshik/ensime-vim'
-Plugin 'Valloric/YouCompleteMe'
-"Plugin 'bleshik/grails-vim'
-Plugin 'xolox/vim-easytags'
-Plugin 'rking/ag.vim'
-Plugin 'bufkill.vim'
-Plugin 'MarcWeber/vim-addon-completion'
-Plugin 'bleshik/ctrlp.vim'
-Plugin 'EasyMotion'
-Plugin 'derekwyatt/vim-fswitch'
-Plugin 'tpope/vim-fugitive'
-Plugin 'vim-scripts/gnupg.vim'
-Plugin 'sjl/gundo.vim'
-Plugin 'laurentgoudet/vim-howdoi'
-Plugin 'elzr/vim-json'
-Plugin 'derekwyatt/vim-sbt'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tpope/vim-surround'
-Plugin 'godlygeek/tabular'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'VisIncr'
-Plugin 'GEverding/vim-hocon'
-Plugin 'xolox/vim-misc'
-Plugin 'henrik/rename.vim'
-Plugin 'junegunn/vim-emoji'
-Plugin 'mxw/vim-jsx'
-Plugin 'Quramy/tsuquyomi'
-Plugin 'Quramy/vim-js-pretty-template'
-Plugin 'leafgarland/typescript-vim'
-"Plugin 'vim-syntastic/syntastic'
-Plugin 'udalov/kotlin-vim'
-Plugin 'tfnico/vim-gradle'
-call vundle#end()
+"set runtimepath+=~/.vim/bundle/Vundle.vim
+call plug#begin('~/.vim/plugged')
+Plug 'sk1418/HowMuch'
+Plug 'tpope/vim-commentary'
+"Plug 'junegunn/vim-easy-align'
+Plug 'tpope/vim-ragtag'
+Plug 'vim-scripts/groovyindent'
+Plug 'Shougo/vimproc.vim'
+Plug 'bleshik/vim-vebugger'
+Plug 'henrik/vim-qargs'
+"Plug 'JavaImp.vim--Lee'
+Plug 'vim-scripts/camelcasemotion'
+Plug 'jeetsukumaran/vim-indentwise'
+Plug 'wikitopian/hardmode'
+Plug 'Alotor/groovim'
+Plug 'kchmck/vim-coffee-script'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'SirVer/ultisnips'
+Plug 'bleshik/vim-snippets'
+"Plug 'bleshik/ensime-vim'
+Plug 'Valloric/YouCompleteMe'
+"Plug 'bleshik/grails-vim'
+Plug 'xolox/vim-easytags'
+Plug 'rking/ag.vim'
+Plug 'vim-scripts/bufkill.vim'
+Plug 'MarcWeber/vim-addon-completion'
+Plug 'vim-scripts/EasyMotion'
+Plug 'derekwyatt/vim-fswitch'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-scripts/gnupg.vim'
+Plug 'sjl/gundo.vim'
+Plug 'laurentgoudet/vim-howdoi'
+Plug 'elzr/vim-json'
+Plug 'derekwyatt/vim-sbt'
+Plug 'derekwyatt/vim-scala'
+Plug 'altercation/vim-colors-solarized'
+Plug 'tpope/vim-surround'
+Plug 'godlygeek/tabular'
+Plug 'tpope/vim-unimpaired'
+Plug 'vim-scripts/VisIncr'
+Plug 'GEverding/vim-hocon'
+Plug 'xolox/vim-misc'
+Plug 'henrik/rename.vim'
+Plug 'junegunn/vim-emoji'
+Plug 'mxw/vim-jsx'
+Plug 'Quramy/tsuquyomi'
+Plug 'Quramy/vim-js-pretty-template'
+Plug 'leafgarland/typescript-vim'
+"Plug 'vim-syntastic/syntastic'
+Plug 'udalov/kotlin-vim'
+Plug 'tfnico/vim-gradle'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+call plug#end()
 filetype plugin indent on
 syntax on
 
@@ -174,7 +176,8 @@ set novisualbell
 " No noise
 set noerrorbells
 " Always show status line
-"set laststatus=2
+set laststatus=2
+set statusline=%f
 
 " Font
 if has("gui_running")
@@ -686,43 +689,25 @@ autocmd FileType java,groovy,scala nmap ,vs :VBGattachJdb 5005
 nmap ,vk :VBGkill<CR>
 
 "-----------------------------------------------------------------------------
-" CtrlP
+" fzf
 "-----------------------------------------------------------------------------
-if executable('ag')
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g "" '.s:ag_ignore
-endif
-let g:ctrlp_extensions = ['tag', 'buffertag', 'dir', 'rtscript', 'line', 'changes', 'mixed']
-let g:ctrlp_mruf_default_order  = 0
-let g:ctrlp_by_filename         = 0
-let g:ctrlp_cache_dir           = $HOME . '/.cache/ctrlp'
-let g:ctrlp_max_files           = 0
-let g:ctrlp_switch_buffer       = 'E'
-let g:ctrlp_tabpage_position    = 'c'
-let g:ctrlp_working_path_mode   = 2
-let g:ctrlp_open_new_file       = 'r'
-let g:ctrlp_open_multiple_files = '1ri'
-let g:ctrlp_match_window        = 'max:40'
-let g:ctrlp_prompt_mappings     = {
-            \ 'PrtSelectMove("j")':   ['<c-n>'],
-            \ 'PrtSelectMove("k")':   ['<c-p>'],
-            \ 'PrtHistory(-1)':       ['<c-j>', '<down>'],
-            \ 'PrtHistory(1)':        ['<c-i>', '<up>']
-            \ }
-nmap ,fb :CtrlPBuffer<cr>
-nmap ,ff :CtrlP .<cr>
-nmap ,fF :execute ':CtrlP ' . expand('%:p:h')<cr>
-nmap ,fr :CtrlP<cr>
-nmap ,fm :CtrlPMixed<cr>
-nmap ,fl :CtrlPLine<cr>
-nmap ,fe :CtrlP 
-nmap ,ft :CtrlPTag<cr>
-let g:ctrlp_map = ',ff'
-let g:ctrlp_working_path_mode = 'w'
-let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/](\.git|\.hg|\.svn|\.idea|target|dist|node_modules)$',
-            \ 'file': '\v\.(exe|so|dll|class|DS_Store|swp|gitignore|log)$',
-            \ 'link': 'some_bad_symbolic_links'
-            \ }
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
+
+nmap ,ff :call fzf#run({'source': g:ag_prg." -g .", 'sink': 'e', 'options': "--preview 'head -n 1000 {}' --color light" }, 1)<cr>
+nmap ,fF :call fzf#run({'source': "cd " . expand('%:p:h') . "; " . g:ag_prg." -g .", 'sink': 'e', 'options': "--preview 'head -n 1000 " .  expand('%:p:h') . "/{}' --color light"}, 1)<cr>
+nmap ,fl :Lines<cr>
+nmap ,fb :Buffers<cr>
+nmap ,ft :Tags<cr>
 
 "-----------------------------------------------------------------------------
 " EasyAlign

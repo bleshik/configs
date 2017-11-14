@@ -1,7 +1,7 @@
 #!/bin/bash - 
 if [ ! -z "$1" ] ; then
     #title "riskmatch $1"
-    IP=`aws ec2 describe-instances --region eu-central-1 --profile rm | grep PublicIp | tail -1 | sed -e 's/.*PublicIp":[^\"]*"\([^"]*\).*/\1/g'`
+    IP=`aws ec2 describe-instances --region eu-central-1 --profile rm | node -pe "[].concat.apply([], JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).Reservations.map(function(r) { return r.Instances; })).find(function(i) { return i.Tags.find(function(t) { return t.Value == 'remote-dev-server'; }) != null }).PublicIpAddress"`
     (cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo "$IP remote-dev-server-riskmatch") > /tmp/hosts.new && cat /tmp/hosts.new > /etc/hosts
     ssh ubuntu@$IP -i ~/.ssh/remote-dev-server.pem -t "(cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo '$IP remote-dev-server-riskmatch') > /tmp/hosts.new && cat /tmp/hosts.new > /etc/hosts; riskmatch"
 else
@@ -18,7 +18,6 @@ else
          new-window -n 'CW' -c "$PWD/backend/carrier-worker" \;\
          new-window -n 'MySQL' \;\
          new-window -n 'backend-v2' -c "$PWD/backend-v2" \;\
-         #send-keys -t $TMUX_SESSION:0 'title "riskmatch"; vim' C-m \;\
          send-keys -t $TMUX_SESSION:9 'mysql -u root' C-m \;\
          select-window -t "$TMUX_SESSION:0" \;\
          attach
