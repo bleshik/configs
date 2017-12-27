@@ -21,5 +21,6 @@ alias restart_web-app="stop_api && start_api"
 
 alias flw="fleetctl --tunnel where00 --ssh-timeout=10"
 alias javafmt="java -jar /usr/local/lib/google-java-format-1.1-all-deps.jar"
+alias python='python3'
 
 source ~/.bash_rm_aliases

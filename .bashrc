@@ -132,6 +132,9 @@ PATH=$PATH:$HOME/K/risk/multi-tool
 PATH=$PATH:/usr/local/bin
 PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
 PATH=$HOME/.scripts/bash:$PATH
+PATH=$HOME/Library/Python/2.7/bin/:$PATH
+PATH=$HOME/Library/Python/3.6/bin/:$PATH
+export AWS_CBOR_DISABLE=1
 
 function notifyLastCommand {
     CODE=$?

@@ -52,6 +52,7 @@ Plug 'Quramy/tsuquyomi'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'leafgarland/typescript-vim'
 "Plug 'vim-syntastic/syntastic'
+Plug 'w0rp/ale'
 Plug 'udalov/kotlin-vim'
 Plug 'tfnico/vim-gradle'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -729,22 +730,6 @@ let g:jsx_ext_required = 0
 let g:tsuquyomi_shortest_import_path = 0
 let g:tsuquyomi_single_quote_import = 1
 let g:tsuquyomi_use_local_typescript = 0
-
-"-----------------------------------------------------------------------------
-" Syntastic
-"-----------------------------------------------------------------------------
-"let g:syntastic_java_checkers = [ 'ensime' ]
-"let g:syntastic_scala_checkers = [ 'ensime' ]
-set statusline+=%#warningmsg#
-set statusline+=%*
-
-let g:tsuquyomi_disable_quickfix = 1
-let g:syntastic_typescript_checkers = ['tsuquyomi']
-
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
 
 "-----------------------------------------------------------------------------
 " Ensime
