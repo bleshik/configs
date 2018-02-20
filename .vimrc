@@ -319,7 +319,7 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=data --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
+let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
 let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
 
 nmap ,sr :AgProjectRoot 
