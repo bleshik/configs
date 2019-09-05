@@ -122,6 +122,7 @@ export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 source ~/.git-completion.bash
 source ~/.gradle-tab-completion.bash
+export GRADLE_USER_HOME="$HOME"
 [[ -d "~/.bash_plugin" ]] && source ~/.bash_plugins/*
 
 PATH=/Applications/MacVim.app/Contents/MacOS:$PATH

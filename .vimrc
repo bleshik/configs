@@ -23,7 +23,7 @@ Plug 'tomtom/tlib_vim'
 Plug 'SirVer/ultisnips'
 Plug 'bleshik/vim-snippets'
 "Plug 'bleshik/ensime-vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 "Plug 'bleshik/grails-vim'
 Plug 'xolox/vim-easytags'
 Plug 'rking/ag.vim'
@@ -57,6 +57,7 @@ Plug 'udalov/kotlin-vim'
 Plug 'tfnico/vim-gradle'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'zxqfl/tabnine-vim'
 call plug#end()
 filetype plugin indent on
 syntax on
