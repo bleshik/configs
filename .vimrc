@@ -4,6 +4,7 @@ set nocompatible
 filetype off
 "set runtimepath+=~/.vim/bundle/Vundle.vim
 call plug#begin('~/.vim/plugged')
+Plug 'jamessan/vim-gnupg'
 Plug 'sk1418/HowMuch'
 Plug 'tpope/vim-commentary'
 "Plug 'junegunn/vim-easy-align'
@@ -34,7 +35,6 @@ Plug 'derekwyatt/vim-fswitch'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/gnupg.vim'
 Plug 'sjl/gundo.vim'
-Plug 'laurentgoudet/vim-howdoi'
 Plug 'elzr/vim-json'
 Plug 'derekwyatt/vim-sbt'
 Plug 'derekwyatt/vim-scala'
@@ -107,6 +107,7 @@ nmap ,cn :let @a = expand("%:h")<CR>:e <C-R>a/
 " Move the current file
 command! -nargs=* -complete=file -bang MoveTo call Rename(<q-args>, '<bang>')
 nmap ,mf :let @a = expand("%")<CR>:MoveTo <C-R>a
+nmap ,ef :make<CR>
 " Copy the current file
 command! -nargs=* -complete=file -bang CopyTo call s:copyCurrentFileTo(<q-args>)
 nmap ,cf :let @a = expand("%")<CR>:CopyTo <C-R>a
@@ -128,6 +129,7 @@ autocmd FileType groovy,scala inoremap <buffer> ,sl private final Logger logger 
 autocmd FileType groovy,scala nmap <buffer> ,sl o,sl<C-C>
 autocmd FileType java inoremap <buffer> ,sl private final Logger logger = LoggerFactory.getLogger(this.getClass());<C-C>m'<CR>:call append(2, "import org.slf4j.Logger;")<CR>:call append(2, "import org.slf4j.LoggerFactory;")<CR>`'a
 autocmd FileType java nmap <buffer> ,sl o,sl<C-C>
+autocmd FileType kotlin set makeprg=kscript\ %
 
 " Jump to the base class
 autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s*\w\+\s*[<\s{$\[]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
@@ -294,15 +296,17 @@ autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,i :execute ":ImportClas
 autocmd FileType java,groovy,scala,kotlin nmap <buffer> ,ii :ImportClass 
 autocmd FileType typescript nmap <buffer> ,i :TsuImport<CR>
 
+"set cm=blowfish2
+
 "-----------------------------------------------------------------------------
 " Fugitive
 "-----------------------------------------------------------------------------
 " Thanks to Drew Neil
-autocmd User fugitive
-            \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
-            \  noremap <buffer> .. :edit %:h<cr> |
-            \ endif
-autocmd BufReadPost fugitive://* set bufhidden=delete
+"autocmd User fugitive
+            "\ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
+            "\  noremap <buffer> .. :edit %:h<cr> |
+            "\ endif
+"autocmd BufReadPost fugitive://* set bufhidden=delete
 
 "nmap ,gs :Gstatus<cr>
 "nmap ,ge :Gedit<cr>
@@ -320,7 +324,7 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
+let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=*.class --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
 let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
 
 nmap ,sr :AgProjectRoot 

@@ -1,0 +1,9 @@
+#!/bin/bash
+cd "$HOME/Dropbox (Personal)/Important/Blog"
+TMUX_SESSION='blog'
+tmux attach -t $TMUX_SESSION || tmux new-session -d -s $TMUX_SESSION -n 'Stories' -c "$PWD/Stories" \;\
+     new-window -n 'Emails' -c "$PWD/Emails" \;\
+     send-keys -t $TMUX_SESSION:0 'vim current.md' C-m \;\
+     send-keys -t $TMUX_SESSION:1 'vim current.md' C-m \;\
+     select-window -t "$TMUX_SESSION:0" \;\
+     attach
