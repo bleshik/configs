@@ -134,7 +134,9 @@ PATH=$HOME/.config/yarn/global/node_modules/.bin:$PATH
 PATH=$HOME/.scripts/bash:$PATH
 PATH=$HOME/Library/Python/2.7/bin/:$PATH
 PATH=$HOME/Library/Python/3.6/bin/:$PATH
+PATH=./node_modules/.bin:$PATH
 export AWS_CBOR_DISABLE=1
+export GRADLE_USER_HOME="$HOME"
 
 function notifyLastCommand {
     CODE=$?

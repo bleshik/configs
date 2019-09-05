@@ -1,7 +1,8 @@
 #!/bin/bash - 
 if [ ! -z "$1" ] ; then
     #title "riskmatch $1"
-    IP=`aws ec2 describe-instances --region ap-southeast-1 --profile rm | node -pe "[].concat.apply([], JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).Reservations.map(function(r) { return r.Instances; })).find(function(i) { return i.Tags.find(function(t) { return t.Value == 'abalchunas-dev-server'; }) != null }).PublicIpAddress"`
+    IP=`aws ec2 describe-instances --region eu-central-1 --profile rm | node -pe "[].concat.apply([], JSON.parse(require('fs').readFileSync('/dev/stdin').toString()).Reservations.map(function(r) { return r.Instances; })).find(function(i) { return i.Tags && i.Tags.find(function(t) { return t.Value == 'abalchunas-dev-server'; }) != null }).PublicIpAddress"`
+    echo $IP
     (cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo "$IP remote-dev-server-riskmatch") > /tmp/hosts.new && cat /tmp/hosts.new > /etc/hosts
     ssh ubuntu@$IP -i ~/.ssh/abalchunas-dev-server.pem -t "(cat /etc/hosts | grep -v remote-dev-server-riskmatch; echo '$IP remote-dev-server-riskmatch') > /tmp/hosts.new && cat /tmp/hosts.new > /etc/hosts; riskmatch"
 else
