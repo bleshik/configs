@@ -4,7 +4,7 @@
 [alias]
     recent-branches = for-each-ref --sort=-committerdate --count=20 --format='%(refname:short)' refs/heads/
     st = status
-    ci = commit --no-verify
+    ci = commit
     br = branch
     co = checkout
     df = diff
@@ -30,7 +30,15 @@
     cmd = vim -c \"/\\(<<<<<<<\\|=======\\|>>>>>>>\\).*\" \"$MERGED\"
 [help]
 	autocorrect = 5
-[url "git@github.com:"]
-    insteadOf = "https://github.com/"
 [http]
 	postBuffer = 524288000
+[pack]
+	windowMemory = 32m
+[rerere]
+	enabled = 1
+	autoupdate = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

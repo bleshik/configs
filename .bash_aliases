@@ -22,5 +22,6 @@ alias restart_web-app="stop_api && start_api"
 alias flw="fleetctl --tunnel where00 --ssh-timeout=10"
 alias javafmt="java -jar /usr/local/lib/google-java-format-1.1-all-deps.jar"
 alias python='python3'
+alias aplay="mplayer -cache 1024 -quiet -rawaudio samplesize=1:channels=1:rate=8000 -demuxer rawaudio -"
 
 source ~/.bash_rm_aliases

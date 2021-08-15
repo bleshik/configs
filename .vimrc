@@ -5,15 +5,12 @@ filetype off
 "set runtimepath+=~/.vim/bundle/Vundle.vim
 call plug#begin('~/.vim/plugged')
 Plug 'jamessan/vim-gnupg'
-Plug 'sk1418/HowMuch'
 Plug 'tpope/vim-commentary'
-"Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-ragtag'
 Plug 'vim-scripts/groovyindent'
 Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'bleshik/vim-vebugger'
 Plug 'henrik/vim-qargs'
-"Plug 'JavaImp.vim--Lee'
 Plug 'vim-scripts/camelcasemotion'
 Plug 'jeetsukumaran/vim-indentwise'
 Plug 'wikitopian/hardmode'
@@ -21,13 +18,9 @@ Plug 'Alotor/groovim'
 Plug 'kchmck/vim-coffee-script'
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'SirVer/ultisnips'
-Plug 'bleshik/vim-snippets'
-"Plug 'bleshik/ensime-vim'
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-"Plug 'bleshik/grails-vim'
-Plug 'xolox/vim-easytags'
-Plug 'rking/ag.vim'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+"Plug 'xolox/vim-easytags'
+Plug 'mileszs/ack.vim'
 Plug 'vim-scripts/bufkill.vim'
 Plug 'MarcWeber/vim-addon-completion'
 Plug 'vim-scripts/EasyMotion'
@@ -51,13 +44,11 @@ Plug 'mxw/vim-jsx'
 Plug 'Quramy/tsuquyomi'
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'leafgarland/typescript-vim'
-"Plug 'vim-syntastic/syntastic'
 Plug 'w0rp/ale'
 Plug 'udalov/kotlin-vim'
 Plug 'tfnico/vim-gradle'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'zxqfl/tabnine-vim'
 call plug#end()
 filetype plugin indent on
 syntax on
@@ -81,7 +72,9 @@ set nofoldenable
 " Chooses colorscheme and changes some colors
 set background=light
 let g:solarized_contrast='normal'
+let g:solarized_termcolors = 256
 colorscheme solarized
+
 
 " Highlights when searches
 set hlsearch
@@ -135,7 +128,7 @@ autocmd FileType kotlin set makeprg=kscript\ %
 autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s*\w\+\s*[<\s{$\[]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
 
 " JSON format shortcut
-autocmd FileType json nmap =j :%!python -m json.tool<CR>
+autocmd FileType json nmap =j :%!jq .<CR>
 
 " Shortcut for replacing the selected word
 vmap ,r y<C-C>:%s/<C-R>"//g<LEFT><LEFT>
@@ -222,6 +215,7 @@ set showmode
 set textwidth=0
 " Highlight the 120th column as a recommendation for maximum amount of characters in single line for code
 "autocmd FileType java,groovy,javascript,typescript,coffeescript,scala setlocal colorcolumn=120
+autocmd FileType javascript,typescript setlocal shiftwidth=2 tabstop=2
 " this is too slow
 "set cursorcolumn
 " Highlight the current line and column
@@ -316,16 +310,22 @@ autocmd FileType typescript nmap <buffer> ,i :TsuImport<CR>
 "-----------------------------------------------------------------------------
 " AG (SilverSearcher) Settings
 "-----------------------------------------------------------------------------
+
 function! AgProjectRoot(pattern)
     "let l:dir = FindGitDirOrCurrent()
     let l:dir = getcwd()
     echom a:pattern . " in " . l:dir
-    execute ':Ag ' . a:pattern . ' "' . dir . '"'
+    execute ':Ack ' . a:pattern . ' "' . dir . '"'
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
 let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=*.class --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
 let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
+let g:ackprg = 'ag --vimgrep --ignore-dir=node_modules'
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>
@@ -627,33 +627,9 @@ nnoremap ,gt :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'u
 nnoremap ,gti :let @" = GrailsTestFilename(expand('%'), g:grails_tests_suffix, 'integration')<CR>:e <C-R>"<CR>
 
 "-----------------------------------------------------------------------------
-" UtilSnips
-"-----------------------------------------------------------------------------
-let g:UltiSnipsExpandTrigger="<tab>"
-" UltiSnips completion function that tries to expand a snippet. If there's no
-" snippet for expanding, it checks for completion window and if it's
-" shown, selects first element. If there's no completion window it tries to
-" jump to next placeholder. If there's no placeholder it just returns TAB key
-function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        call UltiSnips#JumpForwards()
-        if g:ulti_jump_forwards_res == 0
-            if pumvisible()
-                return "\<C-n>"
-            else
-                return "\<TAB>"
-            endif
-        endif
-    endif
-    return ""
-endfunction
-au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-
-"-----------------------------------------------------------------------------
 " YouCompleteMe
 "-----------------------------------------------------------------------------
-let g:ycm_key_list_select_completion=['<C-n>', '<Down>']
+let g:ycm_key_list_select_completion=['<C-n>', '<Down>', '<Tab>']
 let g:ycm_key_list_previous_completion=['<C-p>', '<Up>']
 "let g:ycm_collect_identifiers_from_tags_files = 1
 
