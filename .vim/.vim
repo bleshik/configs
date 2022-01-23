@@ -1,1 +1,1 @@
-/Users/abalchunas/configs/.vim
+/Users/abalchunas/K/configs/.vim
