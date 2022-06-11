@@ -22,4 +22,5 @@ if [ ! -z "`which brew`" ] ; then
     brew install bash
     brew install fzf && /usr/local/opt/fzf/install
     brew install the_silver_searcher
+    brew install jq
 fi

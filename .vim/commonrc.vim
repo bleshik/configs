@@ -83,7 +83,7 @@ autocmd FileType kotlin set makeprg=kscript\ %
 autocmd FileType java,groovy,scala nnoremap <buffer> <C-P> /\(extends\\|implements\)\s*\w\+\s*[<\s{$\[]<CR>:nohls<CR>w<C-]>:call histdel("search", -1)<CR>:let @/ = histget("search", -1)<CR>
 
 " JSON format shortcut
-autocmd FileType json nmap =j :%!jq .<CR>
+autocmd FileType json nmap =j :%!jq --sort-keys .<CR>
 
 " Shortcut for replacing the selected word
 vmap ,r y<C-C>:%s/<C-R>"//g<LEFT><LEFT>
@@ -274,13 +274,13 @@ function! AgProjectRoot(pattern)
 endfunction
 
 command! -nargs=+ AgProjectRoot call AgProjectRoot(<q-args>)
-" let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=*.class --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules"
-" let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
-" let g:ackprg = 'ag --vimgrep --ignore-dir=node_modules'
-" cnoreabbrev ag Ack
-" cnoreabbrev aG Ack
-" cnoreabbrev Ag Ack
-" cnoreabbrev AG Ack
+let s:ag_ignore="--ignore-dir=.git --ignore-dir=vendor --ignore-dir=fonts --ignore-dir=images --ignore-dir=img --ignore-dir=bower_components --ignore-dir=dist --ignore-dir=build --ignore-dir=target --ignore-dir=webpack --ignore=*.class --ignore=.tags --ignore=*.log --ignore=*.css.map --ignore=*.log.* --ignore-dir=third-party --ignore-dir=node_modules --ignore=project.pbxproj"
+let g:ag_prg = 'ag --vimgrep '.s:ag_ignore
+let g:ackprg = 'ag --vimgrep --ignore-dir=node_modules --ignore=project.pbxproj'
+cnoreabbrev ag Ack
+cnoreabbrev aG Ack
+cnoreabbrev Ag Ack
+cnoreabbrev AG Ack
 
 nmap ,sr :AgProjectRoot 
 nmap ,ss :execute ":AgProjectRoot " . expand("<cword>") <CR>

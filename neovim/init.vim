@@ -40,7 +40,7 @@ lua <<EOF
         c = cmp.mapping.close(),
       }),
       ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-      ['<TAB>'] = cmp.mapping.select_next_item(),
+      -- ['<TAB>'] = cmp.mapping.select_next_item(),
     },
     sources = cmp.config.sources({
       { name = 'cmp_tabnine' },

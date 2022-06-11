@@ -1,0 +1,1 @@
+curl -H "Authorization: Basic YWRtaW46bGV0bWVpbg==" "https://api.grunge.app/camon?bundleId=app.dev" | jq | grep source | sed -e 's/.*"source": "//g' | sed -e 's/",$/\n\n\n/g' | sed -e 's/\\n/\n/g' | vim -
