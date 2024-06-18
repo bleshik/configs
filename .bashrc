@@ -199,5 +199,3 @@ function multi-tool { docker run -it --rm -e "MT_MODE=term" -e "SQL_HOST=`(ifcon
 function ctagsJava {
     cd $JAVA_HOME && [ ! -f .tags ] && [ -f src.zip ] && unzip -od src src.zip && echo "Tagging JDK..." && ctags -a -f .tags -R src
 }
-
-source "$HOME/.sdkman/bin/sdkman-init.sh"

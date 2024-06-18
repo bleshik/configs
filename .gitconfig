@@ -3,6 +3,8 @@
     name = Alexey Balchunas
 [alias]
     recent-branches = for-each-ref --sort=-committerdate --count=20 --format='%(refname:short)' refs/heads/
+    stashgrep = "!f() { for i in `git stash list --format=\"%gd\"` ; \
+        do git stash show -p $i | grep -H --label=\"$i\" \"$@\" ; done ; }; f"
     st = status
     ci = commit
     br = branch
@@ -42,3 +44,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[pull]
+	rebase = true

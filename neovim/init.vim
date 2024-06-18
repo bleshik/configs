@@ -10,8 +10,10 @@ Plug 'hrsh7th/cmp-buffer', { 'branch': 'main' }
 Plug 'hrsh7th/cmp-path', { 'branch': 'main' }
 Plug 'hrsh7th/cmp-cmdline', { 'branch': 'main' }
 Plug 'hrsh7th/nvim-cmp', { 'branch': 'main' }
-Plug 'github/copilot.vim', { 'branch': 'release' }
-Plug 'tzachar/cmp-tabnine', { 'branch': 'main', 'do': './install.sh' }
+"Plug 'Exafunction/codeium.nvim', { 'branch': 'main' }
+"Plug 'nvim-lua/plenary.nvim'
+Plug 'supermaven-inc/supermaven-nvim', { 'branch': 'main' }
+"Plug 'github/copilot.vim', { 'branch': 'release' }
 call plug#end()
 
 set completeopt=menu,menuone,noselect
@@ -43,7 +45,6 @@ lua <<EOF
       -- ['<TAB>'] = cmp.mapping.select_next_item(),
     },
     sources = cmp.config.sources({
-      { name = 'cmp_tabnine' },
       { name = 'nvim_lsp' },
       { name = 'vsnip' }, -- For vsnip users.
       -- { name = 'luasnip' }, -- For luasnip users.
@@ -70,17 +71,21 @@ lua <<EOF
     })
   })
 
-  local tabnine = require('cmp_tabnine.config')
-  tabnine:setup({
-      max_lines = 1000;
-      max_num_results = 20;
-      sort = true;
-      run_on_every_keystroke = true;
-      snippet_placeholder = '..';
-      ignored_file_types = { -- default is not to ignore
-          -- uncomment to ignore in lua:
-          -- lua = true
-      };
+  require("supermaven-nvim").setup({
+    keymaps = {
+      accept_suggestion = "<Tab>",
+      clear_suggestion = "<C-]>",
+      accept_word = "<C-j>",
+    },
+    ignore_filetypes = { cpp = true },
+    color = {
+      suggestion_color = "#ffffff",
+      cterm = 244,
+    },
+    disable_inline_completion = false, -- disables inline completion for use with cmp
+    disable_keymaps = false -- disables built in keymaps for more manual control
   })
+
+  --require("codeium").setup({})
 
 EOF
